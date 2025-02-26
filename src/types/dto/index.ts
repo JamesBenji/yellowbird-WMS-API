@@ -16,3 +16,5 @@ export type StockOrigin = {
   latitude: number;
   longitude: number;
 };
+
+export type IncomingStockStatus = "PENDING" | "DELIVERED" | "FAILED"

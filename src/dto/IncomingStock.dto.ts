@@ -1,6 +1,6 @@
 import { ClientContactPerson, ClientItem, StockOrigin } from "../types/dto";
 
-export interface IncomingStock {
+export interface IncomingStockInterface {
     clientId: string;
     merchantId: string;
     stockOrigin: StockOrigin;
