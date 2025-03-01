@@ -1,3 +1,4 @@
 export const BASE_API_ROUTE_V1 = "/api";
 
 export const INCOMING_STOCK_COLLECTION_NAME = "INCOMING_STOCK"
+export const STOCK_IN_COLLECTION_NAME = "STOCK_IN"

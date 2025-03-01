@@ -1,4 +1,3 @@
-
 /**
  * input: uuid for incoming stock notification
  * output: saves received products data
@@ -7,6 +6,21 @@
  * 2. Receives a payload specifying the items received at the warehouse dock (API)
  * 3. Assigns each product an sku while linking it to the stock batchNo and stock ownerId (internal).
  * 4. Saves the received products data in Firestore (Firebase: RECEIVED_INVENTORY)
- * 
+ *
  * END: The PutAway module is triggered into action by a collection listener.
  */
+
+import { StockInType } from "../../../dto/StockIn.dto";
+import { DB } from "../../../interfaces/databases/Database";
+
+export class StockIn {
+  db: DB<StockInType>;
+
+  constructor(DBInstance: DB<StockInType>) {
+    this.db = DBInstance;
+  }
+
+  async saveData(data: StockInType) {
+    await this.db.save(`${data.clientId}-${data.vendorId}/in`, data);
+  }
+}

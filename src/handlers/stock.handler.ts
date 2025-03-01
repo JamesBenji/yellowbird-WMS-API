@@ -1,27 +1,39 @@
 import { Request, Response } from "express-serve-static-core";
 import { IncomingStockInterface } from "../dto/IncomingStock.dto";
 import { StockDeliveryStatus } from "../dto/StockDeliveryStatus.dto";
-import { CreateIncomingStockInstance } from "../config/dependencies";
+import { CreateIncomingStockInstance, CreateStockInInstance } from "../config/database.config";
+import { StockInType } from "../dto/StockIn.dto";
 
 export const handleIncomingStock = async (
   request: Request<{}, {}, IncomingStockInterface>,
   response: Response
 ) => {
   const data = request.body;
-//   console.log({
-//     incomingStock: data,
-//   });
 
-  const incomingStockInstance = CreateIncomingStockInstance(data);
+  const incomingStockInstance = CreateIncomingStockInstance();
+  
   try {
-    await incomingStockInstance.saveIncomingStockData();
+    await incomingStockInstance.saveData(data);
   } catch (error) {
-    console.error("Caught in stock.handler.ts");
+    console.error("Caught in stock.handler.ts :: handleIncomingStock");
     console.error(error);
   }
 };
 
-export const handleStockDeliveryStatus = (
-  request: Request<{}, {}, StockDeliveryStatus>,
-  response: Response
-) => {};
+export const handleStockIn = async (request: Request<{}, {}, StockInType>, response: Response) => {
+  const data = request.body
+
+  const stockInInstance = CreateStockInInstance();
+
+  try {
+    await stockInInstance.saveData(data)
+  } catch (error) {
+    console.error("Caught in stock.handler.ts :: handleStockIn");
+    console.error(error);
+  }
+}
+
+// export const handleStockDeliveryStatus = (
+//   request: Request<{}, {}, StockDeliveryStatus>,
+//   response: Response
+// ) => {};

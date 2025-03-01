@@ -13,19 +13,17 @@ import { IncomingStockInterface } from "../../../dto/IncomingStock.dto";
 import { DB } from "../../../interfaces/databases/Database";
 
 export class IncomingStock {
-  data: IncomingStockInterface;
   db: DB<IncomingStockInterface>;
 
-  constructor(DBInstance: DB<IncomingStockInterface>, data: IncomingStockInterface) {
-    this.data = data;
+  constructor(DBInstance: DB<IncomingStockInterface>) {
     this.db = DBInstance;
   }
 
-  async saveIncomingStockData() {
+  async saveData(data: IncomingStockInterface) {
     try {
-      await this.db.save(`${this.data.clientId}/incoming`, this.data)
+      await this.db.save(`${data.clientId}/incoming`, data);
     } catch (error) {
-      throw new Error(`Error saving data: ${error}`)
+      throw new Error(`Error saving data: ${error}`);
     }
   }
 }

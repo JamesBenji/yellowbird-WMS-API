@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { handleIncomingStock, handleStockDeliveryStatus } from "../handlers/stock.handler";
+import { handleIncomingStock, handleStockIn } from "../handlers/stock.handler";
 
 const router = Router();
 
@@ -9,6 +9,8 @@ const router = Router();
  * PARAMS: See <IncomingStock>
  */
 router.post('/incoming', handleIncomingStock)
+
+router.post('/in', handleStockIn)
 
 
 /**

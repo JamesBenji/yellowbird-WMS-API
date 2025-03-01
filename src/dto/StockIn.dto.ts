@@ -1,7 +1,7 @@
 import { firestore } from "firebase-admin";
 
 export type ReceivedItem = {
-  itemId: string;
+  id: string;
   expectedQuantity: number;
   actualQuantity: number;
   condition: string;
@@ -16,12 +16,15 @@ export type Discrepancy = {
   resolutionStatus?: string;
 };
 
-export type GoodsReceipt = {
-  receiptId: string;
+export type StockInType = {
+  stockIn: string;
   noticeId: string;
-  actualArrivalDate: firestore.Timestamp;
+  actualArrivalDate: string;
   receivedItems: Array<ReceivedItem>;
   discrepancies: Array<Discrepancy>;
   receivedBy: string;
   notes?: string;
+  clientId?: string;
+  vendorId?: string;
+  warehouseId: string;
 }

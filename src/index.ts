@@ -20,10 +20,6 @@ app.use(`${BASE_API_ROUTE_V1}/notification`, notificationRouter);
 app.use(`${BASE_API_ROUTE_V1}/stock`, stockRouter);
 app.use(`${BASE_API_ROUTE_V1}/warehouse`, warehouseRouter);
 
-app.get("/", (request, response) => {
-  response.send("hi").status(200);
-});
-
 app.listen(PORT, () => {
   console.log(`RUNNING ON PORT ${PORT}`);
 }).on("error", (err) => {
