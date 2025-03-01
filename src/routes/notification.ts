@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { handleIncomingStock, handleStockDeliveryStatus } from "../handlers/stock.handler";
+import { handleIncomingStock } from "../handlers/stock.handler";
 
 const router = Router();
 
