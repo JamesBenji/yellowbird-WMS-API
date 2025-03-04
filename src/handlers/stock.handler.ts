@@ -116,3 +116,115 @@ export const handleGetStockInById = async (
   }
 };
 
+export const handleUpdateStockInById = async (
+  request: Request<{}, {}, Partial<StockInType>>,
+  response: Response<WMSResponse<StockInType>>
+) => {
+  const data = request.body;
+
+  if (!data.stockInId && !data.clientId && !data.vendorId) {
+    const parameters = [
+      {
+        name: "stockInId",
+        value: data.stockInId,
+      },
+      {
+        name: "clientId",
+        value: data.clientId,
+      },
+      {
+        name: "vendorId",
+        value: data.vendorId,
+      },
+    ];
+
+    const missingParameters = parameters.filter(
+      (param) => !!param.value === false && param.name
+    );
+
+    const missingParametersString = missingParameters.join(", ");
+
+    response.status(422).send({
+      success: false,
+      error: "Missing parameters",
+      message: `${missingParametersString} ${
+        missingParametersString.length > 1 ? "properties are" : "property is"
+      } missing`,
+    });
+
+    return;
+  }
+
+  const stockInInstance = CreateStockInInstance();
+
+  try {
+    await stockInInstance.updateDataAsync(data);
+    
+    response.status(200).send({
+      success: true,
+      message: 'Update successful'
+    });
+
+  } catch (error) {
+    console.error("Caught in stock.handler.ts :: handleStockIn");
+    console.error(error);
+    errorHandlerInstance.sendError(response, error);
+  }
+};
+
+
+export const handleDeleteStockInById = async (
+  request: Request<{}, {}, {}, StockInGetById>,
+  response: Response<WMSResponse<StockInType>>
+) => {
+  const { stockInId, clientId, vendorId } = request.query;
+
+  if (!stockInId && !clientId && !vendorId) {
+    const parameters = [
+      {
+        name: "stockInId",
+        value: stockInId,
+      },
+      {
+        name: "clientId",
+        value: clientId,
+      },
+      {
+        name: "vendorId",
+        value: vendorId,
+      },
+    ];
+
+    const missingParameters = parameters.filter(
+      (param) => !!param.value === false && param.name
+    );
+
+    const missingParametersString = missingParameters.join(", ");
+
+    response.status(422).send({
+      success: false,
+      error: "Missing parameters",
+      message: `${missingParametersString} ${
+        missingParametersString.length > 1 ? "properties are" : "property is"
+      } missing`,
+    });
+
+    return;
+  }
+
+  const stockInInstance = CreateStockInInstance();
+
+  try {
+    await stockInInstance.deleteDataAsync(stockInId, clientId, vendorId);
+    
+    response.status(200).send({
+      success: true,
+      message: 'Delete successful'
+    });
+
+  } catch (error) {
+    console.error("Caught in stock.handler.ts :: handleStockIn");
+    console.error(error);
+    errorHandlerInstance.sendError(response, error);
+  }
+};

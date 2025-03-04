@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { handleGetStockInById, handleIncomingStock, handleStockIn } from "../handlers/stock.handler";
+import { handleDeleteStockInById, handleUpdateStockInById, handleGetStockInById, handleIncomingStock, handleStockIn } from "../handlers/stock.handler";
 
 const router = Router();
 
@@ -10,8 +10,10 @@ const router = Router();
  */
 router.post("/incoming", handleIncomingStock);
 
-router.post("/in", handleStockIn);
 router.get("/in", handleGetStockInById)
+router.post("/in", handleStockIn);
+router.post("/in/update", handleUpdateStockInById)
+router.get("/in/delete", handleDeleteStockInById)
 
 /**
  * API: /api/v1/stock/delivery/status

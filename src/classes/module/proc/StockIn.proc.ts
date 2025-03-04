@@ -60,12 +60,9 @@ export class StockIn {
   }
 
   async updateDataAsync(
-    stockInId: StockInType["stockInId"],
-    clientId: StockInType["clientId"],
-    vendorId: StockInType["vendorId"],
     data: Partial<StockInType>
   ) {
-    await this.db.update(`${clientId}-${vendorId}/in/${stockInId}`, data);
+    await this.db.update(`${data.clientId}-${data.vendorId}/in/${data.stockInId}`, data);
   }
 
   async deleteDataAsync(

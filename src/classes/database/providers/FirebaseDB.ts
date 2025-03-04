@@ -91,15 +91,20 @@ export class FirebaseDB<T extends firestore.DocumentData> implements DB<T> {
 
   async update(path: string, partialData: Partial<T>): Promise<void> {
     try {
-      const fullPath = this.getFullPath(path);
-
-      if (this.isPathOdd(fullPath)) {
+      if (!this.isPathOdd(path)) {
         throw new Error(
-          "Can not update a collection. Odd path segments received."
+          `${path} is invalid. Odd number of path segments were expected. e.g. A/B/C`
         );
       }
 
-      await firestore().doc(fullPath).update(partialData);
+      const docRef = await this.getDocRef(path);
+
+      if (!docRef) {
+        throw new Error("null document ref received");
+      }
+
+      await docRef.update(partialData);
+      console.log("Successful update");
     } catch (error) {
       throw new Error(
         `Update failed: ${
@@ -111,22 +116,26 @@ export class FirebaseDB<T extends firestore.DocumentData> implements DB<T> {
 
   async delete(path: string): Promise<void> {
     try {
-      const fullPath = this.getFullPath(path);
-
-      if (this.isPathOdd(fullPath)) {
+      if (!this.isPathOdd(path)) {
         throw new Error(
-          "Can not update a collection. Odd path segments received."
+          `${path} is invalid. Odd number of path segments were expected. e.g. A/B/C`
         );
       }
 
-      await firestore().doc(fullPath).delete();
+      const docRef = await this.getDocRef(path);
+
+      if (!docRef) {
+        throw new Error("null document ref received");
+      }
+
+      await docRef.delete();
+      console.log("Successful delete");
     } catch (error) {
       throw new Error(
         `Delete failed: ${
           error instanceof Error ? error.message : String(error)
         }`
       );
-      ``;
     }
   }
 }
