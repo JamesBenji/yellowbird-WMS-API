@@ -42,19 +42,47 @@ export class FirebaseDB<T extends firestore.DocumentData> implements DB<T> {
     }
   }
 
-  async findById(path: string): Promise<T | null> {
+  async getDocRef(
+    path: string
+  ): Promise<firestore.DocumentReference<
+    firestore.DocumentData,
+    firestore.DocumentData
+  > | null> {
     try {
       const fullPath = this.getFullPath(path);
 
-      if (this.isPathOdd(fullPath)) {
+      if (!this.isPathOdd(path)) {
+        throw new Error(`Invalid path(${path}): Unexpected odd path received`);
+      }
+
+      const docRef = firestore().doc(fullPath);
+      return docRef;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
+  async findById(path: string): Promise<T | string | null> {
+    try {
+      if (!this.isPathOdd(path)) {
         throw new Error(
-          "Can not update a collection. Odd path segments received."
+          `${path} is invalid. Odd number of path segments were expected. e.g. A/B/C`
         );
       }
 
-      const snapshot = await firestore().doc(fullPath).get();
-      return snapshot.exists ? (snapshot.data() as T) : null;
+      const docRef = await this.getDocRef(path);
+
+      if (!docRef) {
+        throw new Error("null document ref received");
+      }
+
+      const data = (await docRef.get()).data() as T;
+
+      return data;
     } catch (error) {
+      console.log("Error in FirebaseDB findById");
+
       throw new Error(
         `Find failed: ${error instanceof Error ? error.message : String(error)}`
       );
@@ -97,7 +125,8 @@ export class FirebaseDB<T extends firestore.DocumentData> implements DB<T> {
         `Delete failed: ${
           error instanceof Error ? error.message : String(error)
         }`
-      );``
+      );
+      ``;
     }
   }
 }

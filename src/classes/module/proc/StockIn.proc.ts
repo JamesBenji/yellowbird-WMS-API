@@ -12,6 +12,7 @@
 
 import { StockInType } from "../../../dto/StockIn.dto";
 import { DB } from "../../../interfaces/databases/Database";
+import { StockInGetById } from "../../../types/dto/Stock.dtotypes";
 
 export class StockIn {
   db: DB<StockInType>;
@@ -20,7 +21,58 @@ export class StockIn {
     this.db = DBInstance;
   }
 
-  async saveData(data: StockInType) {
-    await this.db.save(`${data.clientId}-${data.vendorId}/in`, data);
+  generateStockInId() {
+    const timestamp = new Date().toISOString().split("T")[0].replace(/-/g, "");
+    const sequence = Math.floor(Math.random() * 9000) + 1000;
+    return `STOCK-IN-${timestamp}-${sequence}`;
+  }
+
+  async saveDataAsync(data: StockInType) {
+    const stockInId: string = this.generateStockInId()
+    const saveData = {...data, stockInId}
+    await this.db.save(`${data.clientId}-${data.vendorId}/in/${stockInId}`, saveData);
+  }
+
+  async findByIdAsync(
+    stockInId: StockInType["stockInId"],
+    clientId: StockInType["clientId"],
+    vendorId: StockInType["vendorId"]
+  ) {
+    if (!stockInId || !clientId || !vendorId) {
+      const missingParams = [];
+      const paramMap: Record<string, any> = { stockInId, clientId, vendorId };
+
+      for (const key in paramMap) {
+        if (!paramMap[key]) {
+          missingParams.push(key);
+        }
+      }
+      const errorMessage = `${missingParams.join(", ")} ${
+        missingParams.length > 1 ? "are" : "is"
+      } missing.`;
+
+      throw new Error(errorMessage);
+    }
+
+    const params: StockInGetById = { stockInId, clientId, vendorId };
+    const data = await this.db.findById(`${clientId}-${vendorId}/in/${stockInId}`);
+    return data;
+  }
+
+  async updateDataAsync(
+    stockInId: StockInType["stockInId"],
+    clientId: StockInType["clientId"],
+    vendorId: StockInType["vendorId"],
+    data: Partial<StockInType>
+  ) {
+    await this.db.update(`${clientId}-${vendorId}/in/${stockInId}`, data);
+  }
+
+  async deleteDataAsync(
+    stockInId: StockInType["stockInId"],
+    clientId: StockInType["clientId"],
+    vendorId: StockInType["vendorId"]
+  ) {
+    await this.db.delete(`${clientId}-${vendorId}/in/${stockInId}`);
   }
 }

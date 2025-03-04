@@ -17,7 +17,7 @@ export type Discrepancy = {
 };
 
 export type StockInType = {
-  stockIn: string;
+  stockInId?: string; // set by server, client can ignore
   noticeId: string;
   actualArrivalDate: string;
   receivedItems: Array<ReceivedItem>;

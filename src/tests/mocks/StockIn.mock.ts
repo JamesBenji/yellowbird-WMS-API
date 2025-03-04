@@ -1,5 +1,5 @@
-[{
-    "stockIn": "RCPT-2025-0301-001",
+const x = [{
+    "stockInId": "RCPT-2025-0301-001",
     "noticeId": "NOTICE-2025-001",
     "actualArrivalDate": "2025-10-02T01:22:2223Z",
     "receivedItems": [
@@ -41,4 +41,42 @@
     "clientId": "CLIENT-001",
     "vendorId": "VENDOR-005",
     "warehouseId": "WH-NORTH-01"
+  }]
+
+
+  const y = [{
+    "noticeId": "NOTICE-2023-001",
+    "actualArrivalDate": "2023-08-15T14:30:00Z",
+    "receivedItems": [
+      {
+        "id": "ITEM-001",
+        "expectedQuantity": 100,
+        "actualQuantity": 95,
+        "condition": "Damaged"
+      },
+      {
+        "id": "ITEM-002",
+        "expectedQuantity": 200,
+        "actualQuantity": 200,
+        "condition": "Good"
+      }
+    ],
+    "discrepancies": [
+      {
+        "itemId": "ITEM-001",
+        "discrepancyType": "Quantity",
+        "description": "Short by 5 units",
+        "resolutionStatus": "Pending vendor confirmation"
+      },
+      {
+        "itemId": "ITEM-001",
+        "discrepancyType": "Condition",
+        "description": "Water damage on packaging"
+      }
+    ],
+    "receivedBy": "EMP-1234",
+    "notes": "Pallet 3 had visible water damage",
+    "clientId": "CLIENT-ACME",
+    "vendorId": "VENDOR-SHIPCO",
+    "warehouseId": "WAREHOUSE-01"
   }]

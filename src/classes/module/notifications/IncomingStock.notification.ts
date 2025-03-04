@@ -19,7 +19,7 @@ export class IncomingStock {
     this.db = DBInstance;
   }
 
-  async saveData(data: IncomingStockInterface) {
+  async saveDataAsync(data: IncomingStockInterface) {
     try {
       await this.db.save(`${data.clientId}/incoming`, data);
     } catch (error) {

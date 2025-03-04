@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { handleIncomingStock, handleStockIn } from "../handlers/stock.handler";
+import { handleGetStockInById, handleIncomingStock, handleStockIn } from "../handlers/stock.handler";
 
 const router = Router();
 
@@ -8,10 +8,10 @@ const router = Router();
  * DESCRIPTION: allows the caller to notify the warehouse of incoming stock
  * PARAMS: See <IncomingStock>
  */
-router.post('/incoming', handleIncomingStock)
+router.post("/incoming", handleIncomingStock);
 
-router.post('/in', handleStockIn)
-
+router.post("/in", handleStockIn);
+router.get("/in", handleGetStockInById)
 
 /**
  * API: /api/v1/stock/delivery/status
