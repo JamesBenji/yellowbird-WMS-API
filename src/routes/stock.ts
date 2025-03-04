@@ -1,5 +1,11 @@
 import { Router } from "express";
-import { handleDeleteStockInById, handleUpdateStockInById, handleGetStockInById, handleIncomingStock, handleStockIn } from "../handlers/stock.handler";
+import {
+  handleDeleteStockInById,
+  handleUpdateStockInById,
+  handleGetStockInById,
+  handleIncomingStock,
+  handleStockIn,
+} from "../handlers/stock.handler";
 
 const router = Router();
 
@@ -10,17 +16,9 @@ const router = Router();
  */
 router.post("/incoming", handleIncomingStock);
 
-router.get("/in", handleGetStockInById)
+router.get("/in", handleGetStockInById);
 router.post("/in", handleStockIn);
-router.post("/in/update", handleUpdateStockInById)
-router.get("/in/delete", handleDeleteStockInById)
-
-/**
- * API: /api/v1/stock/delivery/status
- * DESCRIPTION: allows the caller to request a status update on the delivery of a stock batch
- * PARAMS: See <IncomingStock>
- * RESOLUTION: This will be implemented by a callback to the client's system. In case of any failure, a log of callbacks made to the client will support system recovery.
- */
-// router.post('/delivery/status', handleStockDeliveryStatus)
+router.post("/in/update", handleUpdateStockInById);
+router.get("/in/delete", handleDeleteStockInById);
 
 export default router;

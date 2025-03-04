@@ -1,33 +1,37 @@
 import { firestore } from "firebase-admin";
 
-export type InspectionPoint = {
-  attributeName: string;
-  expected: string;
-  actual: string;
-  passed: boolean;
-};
+// export type InspectionPoint = {
+//   attributeName: string;
+//   expected: string;
+//   actual: string;
+//   passed: boolean;
+// };
 
 export type InspectedItem = {
   itemId: string;
-  quantity: number;
-  inspectionPoints: Array<InspectionPoint>;
+  units: number;
+  sku?: string;
+  hasPassed: boolean;
+  inspectionBatch?: string
+  // inspectionPoints: Array<InspectionPoint>;
+  // quality:
 };
 
-export type RatingValue = "Pass" | "Fail" | "Conditional";
+// export type RatingValue = "Pass" | "Fail" | "Conditional";
 
-export type QualityRating = {
-  itemId: string;
-  rating: RatingValue;
-  score?: number;
-};
+// export type QualityRating = {
+//   itemId: string;
+//   rating: RatingValue;
+//   score?: number;
+// };
 
-export type DefectDetail = {
-  itemId: string;
-  defectType: string;
-  severity: string;
-  description: string;
-  photosUrls?: string[];
-};
+// export type DefectDetail = {
+//   itemId: string;
+//   defectType: string;
+//   severity: string;
+//   description: string;
+//   photosUrls?: string[];
+// };
 
 export type InspectorDetails = {
     name: string;
@@ -35,12 +39,14 @@ export type InspectorDetails = {
   }
 
 export type InspectionResults = {
-  inspectionId: string;
+  inspectionBatchNo?: string; 
   inspectedItems: Array<InspectedItem>;
-  qualityRatings: Array<QualityRating>;
-  defectDetails?: Array<DefectDetail>;
-  inspectorDetails: InspectorDetails;
-  completionDate: Date;
-  timestamp: firestore.Timestamp;
+  inspectionDate: string;
+  inspector: InspectorDetails;
   notes?: string;
+  stockInId: string;
+  clientId: string;
+  vendorId: string;
+  // qualityRatings: Array<QualityRating>;
+  // defectDetails?: Array<DefectDetail>;
 };

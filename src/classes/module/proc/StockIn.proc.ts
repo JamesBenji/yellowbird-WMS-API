@@ -54,7 +54,6 @@ export class StockIn {
       throw new Error(errorMessage);
     }
 
-    const params: StockInGetById = { stockInId, clientId, vendorId };
     const data = await this.db.findById(`${clientId}-${vendorId}/in/${stockInId}`);
     return data;
   }
