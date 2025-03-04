@@ -5,3 +5,7 @@ type GetById = {
 }
 export type StockInGetById = GetById
 export type InspectionGetById = GetById
+export type PutAwayGetById = GetById & {
+  itemId: string,
+  warehouseLocation?: string;
+}

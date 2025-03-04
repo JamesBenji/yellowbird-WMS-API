@@ -1,4 +1,4 @@
-import { firestore } from "firebase-admin";
+import { Item } from "./Item.dto";
 
 // export type InspectionPoint = {
 //   attributeName: string;
@@ -7,10 +7,10 @@ import { firestore } from "firebase-admin";
 //   passed: boolean;
 // };
 
-export type InspectedItem = {
+export type InspectedItem = Item &{
   itemId: string;
+  containsUnits: boolean;
   units: number;
-  sku?: string;
   hasPassed: boolean;
   inspectionBatch?: string
   // inspectionPoints: Array<InspectionPoint>;
@@ -47,6 +47,7 @@ export type InspectionResults = {
   stockInId: string;
   clientId: string;
   vendorId: string;
+  arrivalDate: string;
   // qualityRatings: Array<QualityRating>;
   // defectDetails?: Array<DefectDetail>;
 };

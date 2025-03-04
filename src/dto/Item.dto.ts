@@ -65,6 +65,6 @@ export interface Item {
   weight?: ItemWeight;
   handlingInstructions?: string;
   hazardInfo?: ItemHazardousInfo;
-  fragilityType: ItemFragilityType;
+  fragilityType: ItemFragilityType | null;
   batches?: ItemBatchFieldType[];
 }

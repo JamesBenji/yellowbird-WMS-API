@@ -3,6 +3,7 @@ import notificationRouter from "./routes/notification";
 import stockRouter from "./routes/stock";
 import warehouseRouter from "./routes/warehouse";
 import inspectionRouter from "./routes/inspection";
+import putAwayRouter from "./routes/putaway";
 import { BASE_API_ROUTE_V1 } from "./config";
 import { config } from "dotenv";
 import cors from "cors";
@@ -21,6 +22,7 @@ app.use(`${BASE_API_ROUTE_V1}/notification`, notificationRouter);
 app.use(`${BASE_API_ROUTE_V1}/stock`, stockRouter);
 app.use(`${BASE_API_ROUTE_V1}/warehouse`, warehouseRouter);
 app.use(`${BASE_API_ROUTE_V1}/inspection`, inspectionRouter);
+app.use(`${BASE_API_ROUTE_V1}/putaway`, putAwayRouter);
 
 app.listen(PORT, () => {
   console.log(`RUNNING ON PORT ${PORT}`);
