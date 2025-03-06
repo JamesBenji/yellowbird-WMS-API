@@ -1,11 +1,16 @@
 type GetById = {
-  stockInId: string;
   clientId: string;
-  vendorId: string
-}
-export type StockInGetById = GetById
-export type InspectionGetById = GetById
+  vendorId: string;
+};
+export type StockInGetById = GetById & { stockInId: string };
+export type InspectionGetById = GetById & { stockInId: string };
 export type PutAwayGetById = GetById & {
-  itemId: string,
+  stockInId: string;
+  itemId: string;
   warehouseLocation?: string;
+};
+export type StockOutGetById = GetById & { id: string };
+export type DispatchedGetById = {
+  stockOutOrderId: string;
+  id: string
 }

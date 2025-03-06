@@ -57,7 +57,7 @@ export type ItemDimensions = {
 };
 
 export interface Item {
-  itemId: string;
+  id: string;
   sku?: string;
   description: string;
   category: string;
@@ -67,4 +67,7 @@ export interface Item {
   hazardInfo?: ItemHazardousInfo;
   fragilityType: ItemFragilityType | null;
   batches?: ItemBatchFieldType[];
+  clientId: string;
+  vendorId: string;
+  warehouseId?: string;
 }

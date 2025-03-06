@@ -1,3 +1,4 @@
 A path to the collection or document made via an object implementing the DB interface must not:
     1. Begin with a /
     2. End with a /
+If an order consists of products from multiple vendors, the database structure should support multi-vendor orders while maintaining proper stock tracking per vendor.

@@ -12,7 +12,6 @@
 
 import { StockInType } from "../../../dto/StockIn.dto";
 import { DB } from "../../../interfaces/databases/Database";
-import { StockInGetById } from "../../../types/dto/Stock.dtotypes";
 
 export class StockIn {
   db: DB<StockInType>;
