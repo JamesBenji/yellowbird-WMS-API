@@ -1,30 +1,16 @@
-import { firestore } from "firebase-admin";
+import { SharedProperties } from "./shared/Shared.dto";
+import { Item } from "./Item.dto";
 
-export type ReceivedItem = {
-  id: string;
-  expectedQuantity: number;
-  actualQuantity: number;
-  condition: string;
-};
-
-export type DiscrepancyType = "Quantity" | "Condition" | "Wrong Item" | "Missing Item";
-
-export type Discrepancy = {
-  itemId: string;
-  discrepancyType: DiscrepancyType;
-  description: string;
-  resolutionStatus?: string;
-};
-
-export type StockInType = {
-  stockInId?: string; // set by server, client can ignore
-  noticeId: string;
-  arrivalDate: string;
-  receivedItems: Array<ReceivedItem>;
-  discrepancies: Array<Discrepancy>;
-  receivedBy: string;
-  notes?: string;
-  clientId?: string;
-  vendorId?: string;
+export type StockInType = SharedProperties & {
+  batchNo?: string; // set by server, client application can ignore
+  companyId?: string;
+  incomingStockId: string; //reference to the incoming stock notification
+  items: Array<Item>;
+  arrivalDay: string; //de-structured date fields to ease search
+  arrivalMonth: string;
+  arrivalYear: string;
+  receiverId: string;
+  comments?: string;
   warehouseId: string;
-}
+  arrivalDateTimeMillis: number;
+};

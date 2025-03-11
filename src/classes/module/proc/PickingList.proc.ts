@@ -8,11 +8,41 @@ export class PickingList {
     this.db = DBInstance;
   }
 
-  async generatePickingList(
-    stockOutOrder: StockOutOrderDTO
-  ): Promise<PickingListDTO | null> {
-    let pickingList: PickingListDTO;
+  generateUniqueId() {
+    const timestamp = new Date().toISOString().split("T")[0].replace(/-/g, "");
+    const sequence = Math.floor(Math.random() * 9000) + 1000;
+    return `STOCK-IN-${timestamp}-${sequence}`;
+  }
 
-    return null;
+  async generatePickingList(
+    stockOutOrder: StockOutOrderDTO, 
+    warehouseId: string
+  ): Promise<void | null> {
+
+    // if (stockOutOrder.status !== "pending") {
+    //   throw new Error("Picking list can only be generated for pending orders.");
+    // }
+
+    const id = this.generateUniqueId()
+
+    const pickingList: PickingListDTO = {
+      id, 
+      stockOutOrderId: stockOutOrder.id,
+      warehouseId: warehouseId,
+      pickerId: "", 
+      items: stockOutOrder.items,
+      creationDateTimeMillis: new Date().getTime(),
+      status: "pending",
+      comments: stockOutOrder.comments,
+    };
+
+    try {
+      await this.db.save(`${stockOutOrder.id}/list/${id}`, pickingList);
+      // return pickingList;
+    } catch (error) {
+      console.error("Error generating picking list:", error);
+      return null;
+    }
+
   }
 }

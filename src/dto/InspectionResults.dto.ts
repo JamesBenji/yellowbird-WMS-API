@@ -1,4 +1,5 @@
 import { Item } from "./Item.dto";
+import { SharedProperties } from "./shared/Shared.dto";
 
 // export type InspectionPoint = {
 //   attributeName: string;
@@ -7,15 +8,15 @@ import { Item } from "./Item.dto";
 //   passed: boolean;
 // };
 
-export type InspectedItem = Item &{
-  itemId: string;
-  containsUnits: boolean;
-  units: number;
-  hasPassed: boolean;
-  inspectionBatch?: string
-  // inspectionPoints: Array<InspectionPoint>;
-  // quality:
-};
+// export type InspectedItem = Item & {
+//   itemId: string;
+//   containsUnits: boolean;
+//   units: number;
+//   hasPassed: boolean;
+//   inspectionBatch?: string;
+//   // inspectionPoints: Array<InspectionPoint>;
+//   // quality:
+// };
 
 // export type RatingValue = "Pass" | "Fail" | "Conditional";
 
@@ -34,20 +35,21 @@ export type InspectedItem = Item &{
 // };
 
 export type InspectorDetails = {
-    name: string;
-    id?: string
-  }
+  name: string;
+  id?: string;
+};
 
-export type InspectionResults = {
-  inspectionBatchNo?: string; 
-  inspectedItems: Array<InspectedItem>;
-  inspectionDate: string;
+export type InspectionResults = SharedProperties & {
+  batchNo: string; //from StockInType
+  inspectedItems: Array<Item>;
   inspector: InspectorDetails;
   notes?: string;
-  stockInId: string;
-  clientId: string;
-  vendorId: string;
-  arrivalDate: string;
-  // qualityRatings: Array<QualityRating>;
-  // defectDetails?: Array<DefectDetail>;
+  companyId: string;
+  inspectionDay: string; //de-structured date fields to ease search
+  inspectionMonth: string;
+  inspectionYear: string;
+  inspectionDateTimeMillis: string;
+  inspectionStartDateTimeMillis: number;
+  inspectionEndDateTimeMillis: number;
+  observations: string; //inspectionReport
 };

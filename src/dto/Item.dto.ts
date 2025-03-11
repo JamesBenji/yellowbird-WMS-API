@@ -1,6 +1,5 @@
-
 /**
- * FIREBASE STORAGE STRUCTURE: Items/{clientId}/Items/{ItemId}
+ * FIREBASE STORAGE STRUCTURE: Items/{companyId}/Items/{ItemId}
  */
 
 export type ItemBatchFieldType = {
@@ -53,21 +52,44 @@ export type ItemDimensions = {
   length: number;
   width: number;
   height: number;
-  unit: 'cm' | 'm';
+  unit: "cm" | "m";
 };
 
-export interface Item {
+export type Item = {
   id: string;
+  companyId: string;
+  itemQuantity: number;
+  name?: string;
   sku?: string;
-  description: string;
-  category: string;
-  dimensions?: ItemDimensions;
-  weight?: ItemWeight;
-  handlingInstructions?: string;
-  hazardInfo?: ItemHazardousInfo;
-  fragilityType: ItemFragilityType | null;
-  batches?: ItemBatchFieldType[];
-  clientId: string;
-  vendorId: string;
-  warehouseId?: string;
-}
+  stockLevel?: "LOW" | "OUT_OF_STOCK" | "IN_STOCK";
+  itemCategory?: string;
+  itemWeightKg?: number;
+  itemHeightCm?: number;
+  itemWidthCm?: number;
+  itemLengthCm?: number;
+  itemTotalCost?: number;
+  currency?: string;
+  itemLabel?: string;
+  itemDescription?: string;
+  itemColor?: string;
+  itemImageUrl?: string;
+  passedInspection?: boolean;
+  handlingRequirements?: {
+    fragile?: boolean;
+    hazardous?: boolean;
+    medicalItem?: boolean;
+    prescriptionRequired?: boolean;
+    specialPackagingRequired?: boolean;
+    uprightPositionRequired?: boolean;
+    refrigerationRequired?: boolean;
+    ageRestriction?: number;
+    temperatureRange?: {
+      min: number;
+      max: number;
+    };
+    fragilityLevel?: "None" | "Low" | "Unspecified";
+    isLightSensitive?: boolean;
+    isWaterSensitive?: boolean;
+    handlingInstructions?: string;
+  };
+};

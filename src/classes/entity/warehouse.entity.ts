@@ -10,20 +10,20 @@ export class Warehouse {
 
   async saveDataAsync(data: PutAwayItem, itemId: string) {
     await this.db.save(
-      `${data.warehouseLocation}/items/${data.clientId}-${data.vendorId}-${itemId}`,
+      `${data.warehouseLocation}/items/${data.companyId}-${data.vendorId}-${itemId}`,
       data
     );
   }
 
   async findByIdAsync(
     warehouseLocation: PutAwayItem["warehouseLocation"],
-    clientId: PutAwayItem["clientId"],
+    companyId: PutAwayItem["companyId"],
     vendorId: PutAwayItem["vendorId"],
     itemId: string
   ) {
-    if (!warehouseLocation || !clientId || !vendorId) {
+    if (!warehouseLocation || !companyId || !vendorId) {
       const missingParams = [];
-      const paramMap: Record<string, any> = { warehouseLocation, clientId, vendorId };
+      const paramMap: Record<string, any> = { warehouseLocation, companyId, vendorId };
 
       for (const key in paramMap) {
         if (!paramMap[key]) {
@@ -38,24 +38,24 @@ export class Warehouse {
     }
 
     const data = await this.db.findById(
-      `${warehouseLocation}/items/${clientId}-${vendorId}-${itemId}`
+      `${warehouseLocation}/items/${companyId}-${vendorId}-${itemId}`
     );
     return data;
   }
 
   async updateDataAsync(data: Partial<PutAwayItem>, itemId: string) {
     await this.db.update(
-      `${data.warehouseLocation}/items/${data.clientId}-${data.vendorId}-${itemId}`,
+      `${data.warehouseLocation}/items/${data.companyId}-${data.vendorId}-${itemId}`,
       data
     );
   }
 
   async deleteDataAsync(
     warehouseLocation: PutAwayItem["warehouseLocation"],
-    clientId: PutAwayItem["clientId"],
+    companyId: PutAwayItem["companyId"],
     vendorId: PutAwayItem["vendorId"],
     itemId: string
   ) {
-    await this.db.delete(`${warehouseLocation}/items/${clientId}-${vendorId}-${itemId}`);
+    await this.db.delete(`${warehouseLocation}/items/${companyId}-${vendorId}-${itemId}`);
   }
 }

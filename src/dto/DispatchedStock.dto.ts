@@ -1,4 +1,5 @@
 import { Item } from "./Item.dto";
+import { SharedProperties } from "./shared/Shared.dto";
 
 export type LogisticsDetails = {
   logisticsProvider: string;
@@ -8,15 +9,18 @@ export type LogisticsDetails = {
   vehicleType: string;
 };
 
-export type DispatchedStockDTO = {
+export type DispatchedStockDTO = SharedProperties & {
   id: string;
   stockOutOrderId: string;
   warehouseId: string;
   dispatchedBy: string;
   items: Array<Item>;
-  trackingNumber?: string;
   logisticsDetails?: LogisticsDetails;
-  status: "dispatched" | "returned";
-  dispatchedAt: string;
-  notes?: string;
+  logisticsProviderName: string;
+  logisticsProviderPlateNumber?: string;
+  logisticsProviderDriverName?: string;
+  logisticsProviderContactNumber?: string;
+  logisticsProviderVehicleType?: string;
+  comments?: string;
+  qrCode?: string;
 };

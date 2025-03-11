@@ -1,15 +1,11 @@
 import { Request, Response } from "express-serve-static-core";
-import { IncomingStockInterface } from "../dto/IncomingStock.dto";
 import {
-  CreateIncomingStockInstance,
-  CreateStockInInstance,
   CreateStockOutOrderInstance,
 } from "../config/database.config";
 import { StockInType } from "../dto/StockIn.dto";
-import { StockInGetById, StockOutGetById } from "../types/dto/Stock.dtotypes";
+import { StockOutGetById } from "../types/dto/Stock.dtotypes";
 import { WMSResponse } from "../types/dto";
 import { errorHandlerInstance } from "../config/errorHandler.config";
-import { StockOutOrder } from "../classes/module/proc/StockOutOrder.proc";
 import { StockOutOrderDTO } from "../dto/StockOutOrder.dto";
 
 export const handleStockOut = async (
@@ -39,17 +35,17 @@ export const handleGetStockOutById = async (
   request: Request<{}, {}, {}, StockOutGetById>,
   response: Response<WMSResponse<StockOutOrderDTO>>
 ) => {
-  const { id, clientId, vendorId } = request.query;
+  const { id, companyId, vendorId } = request.query;
 
-  if (!id && !clientId && !vendorId) {
+  if (!id && !companyId && !vendorId) {
     const parameters = [
       {
         name: "id",
         value: id,
       },
       {
-        name: "clientId",
-        value: clientId,
+        name: "companyId",
+        value: companyId,
       },
       {
         name: "vendorId",
@@ -79,7 +75,7 @@ export const handleGetStockOutById = async (
   try {
     const data = await stockOutInstance.findByIdAsync(
       id,
-      clientId,
+      companyId,
       vendorId
     );
 
@@ -108,15 +104,15 @@ export const handleUpdateStockOutById = async (
 ) => {
   const data = request.body;
 
-  if (!data.id && !data.clientId && !data.vendorId) {
+  if (!data.id && !data.companyId && !data.vendorId) {
     const parameters = [
       {
         name: "id",
         value: data.id,
       },
       {
-        name: "clientId",
-        value: data.clientId,
+        name: "companyId",
+        value: data.companyId,
       },
       {
         name: "vendorId",
@@ -163,17 +159,17 @@ export const handleDeleteStockOutById = async (
   request: Request<{}, {}, {}, StockOutGetById>,
   response: Response<WMSResponse<StockInType>>
 ) => {
-  const { id, clientId, vendorId } = request.query;
+  const { id, companyId, vendorId } = request.query;
 
-  if (!id && !clientId && !vendorId) {
+  if (!id && !companyId && !vendorId) {
     const parameters = [
       {
         name: "id",
         value: id,
       },
       {
-        name: "clientId",
-        value: clientId,
+        name: "companyId",
+        value: companyId,
       },
       {
         name: "vendorId",
@@ -201,7 +197,7 @@ export const handleDeleteStockOutById = async (
   const stockOutInstance = CreateStockOutOrderInstance();
 
   try {
-    await stockOutInstance.deleteDataAsync(id, clientId, vendorId);
+    await stockOutInstance.deleteDataAsync(id, companyId, vendorId);
     
     response.status(200).send({
       success: true,

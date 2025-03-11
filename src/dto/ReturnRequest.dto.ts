@@ -1,3 +1,5 @@
+import { SharedProperties } from "./shared/Shared.dto";
+
 export type ReturnStatusTypes =
   | "Initiated"
   | "Authorized"
@@ -25,7 +27,7 @@ export type CustomerInfo = {
   contactDetails: ContactDetails;
 };
 
-export type ReturnRequest = {
+export type ReturnRequest = SharedProperties & {
   returnId: string;
   orderId: string;
   customerInfo: CustomerInfo;

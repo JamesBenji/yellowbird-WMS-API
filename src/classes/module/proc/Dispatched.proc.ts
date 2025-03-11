@@ -28,7 +28,7 @@ export class Dispatched {
   async saveDataAsync(data: DispatchedStockDTO) {
     const stockOutId: string = this.generateStockDispatchedId()
     const saveData = {...data, id: stockOutId}
-    await this.db.save(`${data.stockOutOrderId}/dispatched/${stockOutId}`, saveData);
+    await this.db.save(`${stockOutId}`, saveData);
   }
 
   async findByIdAsync(
@@ -51,20 +51,20 @@ export class Dispatched {
       throw new Error(errorMessage);
     }
 
-    const data = await this.db.findById(`${stockOutOrderId}/dispatched/${id}`);
+    const data = await this.db.findById(`${id}`);
     return data;
   }
 
   async updateDataAsync(
     data: Partial<DispatchedStockDTO>
   ) {
-    await this.db.update(`${data.stockOutOrderId}/dispatched/${data.id}`, data);
+    await this.db.update(`${data.id}`, data);
   }
 
   async deleteDataAsync(
     id: DispatchedStockDTO["id"],
     stockOutOrderId: DispatchedStockDTO["stockOutOrderId"],
   ) {
-    await this.db.delete(`${stockOutOrderId}/dispatched/${id}`);
+    await this.db.delete(`${id}`);
   }
 }

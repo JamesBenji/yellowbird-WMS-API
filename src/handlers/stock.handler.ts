@@ -53,17 +53,17 @@ export const handleGetStockInById = async (
   request: Request<{}, {}, {}, StockInGetById>,
   response: Response<WMSResponse<StockInType>>
 ) => {
-  const { stockInId, clientId, vendorId } = request.query;
+  const { stockInId, companyId, vendorId } = request.query;
 
-  if (!stockInId && !clientId && !vendorId) {
+  if (!stockInId && !companyId && !vendorId) {
     const parameters = [
       {
         name: "stockInId",
         value: stockInId,
       },
       {
-        name: "clientId",
-        value: clientId,
+        name: "companyId",
+        value: companyId,
       },
       {
         name: "vendorId",
@@ -93,7 +93,7 @@ export const handleGetStockInById = async (
   try {
     const data = await stockInInstance.findByIdAsync(
       stockInId,
-      clientId,
+      companyId,
       vendorId
     );
 
@@ -122,15 +122,15 @@ export const handleUpdateStockInById = async (
 ) => {
   const data = request.body;
 
-  if (!data.stockInId && !data.clientId && !data.vendorId) {
+  if (!data.stockInId && !data.companyId && !data.vendorId) {
     const parameters = [
       {
         name: "stockInId",
         value: data.stockInId,
       },
       {
-        name: "clientId",
-        value: data.clientId,
+        name: "companyId",
+        value: data.companyId,
       },
       {
         name: "vendorId",
@@ -177,17 +177,17 @@ export const handleDeleteStockInById = async (
   request: Request<{}, {}, {}, StockInGetById>,
   response: Response<WMSResponse<StockInType>>
 ) => {
-  const { stockInId, clientId, vendorId } = request.query;
+  const { stockInId, companyId, vendorId } = request.query;
 
-  if (!stockInId && !clientId && !vendorId) {
+  if (!stockInId && !companyId && !vendorId) {
     const parameters = [
       {
         name: "stockInId",
         value: stockInId,
       },
       {
-        name: "clientId",
-        value: clientId,
+        name: "companyId",
+        value: companyId,
       },
       {
         name: "vendorId",
@@ -215,7 +215,7 @@ export const handleDeleteStockInById = async (
   const stockInInstance = CreateStockInInstance();
 
   try {
-    await stockInInstance.deleteDataAsync(stockInId, clientId, vendorId);
+    await stockInInstance.deleteDataAsync(stockInId, companyId, vendorId);
     
     response.status(200).send({
       success: true,

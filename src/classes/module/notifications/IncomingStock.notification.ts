@@ -21,7 +21,7 @@ export class IncomingStock {
 
   async saveDataAsync(data: IncomingStockInterface) {
     try {
-      await this.db.save(`${data.clientId}/incoming`, data);
+      await this.db.save(`${data.companyId}/incoming`, data);
     } catch (error) {
       throw new Error(`Error saving data: ${error}`);
     }

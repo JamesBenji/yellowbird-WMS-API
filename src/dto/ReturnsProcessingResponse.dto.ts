@@ -1,3 +1,5 @@
+import { SharedProperties } from "./shared/Shared.dto";
+
 export type ProcessedReturnedItem = {
   itemId: string;
   quantity: number;
@@ -21,7 +23,7 @@ export type DispositionDecision = {
   notes?: string;
 };
 
-export type ReturnProcessingResult = {
+export type ReturnProcessingResult = SharedProperties & {
   returnId: string;
   receivedItems: Array<ProcessedReturnedItem>;
   inspectionResults: Array<InspectionResults>;

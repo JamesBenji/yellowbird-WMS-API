@@ -7,19 +7,19 @@ import { PutAwayItem } from "../dto/PutAway.dto";
 
 const checkMandatoryParameters = async (
   stockInId: string | undefined,
-  clientId: string | undefined,
+  companyId: string | undefined,
   vendorId: string | undefined,
   response: Response
 ) => {
-  if (!stockInId && !clientId && !vendorId) {
+  if (!stockInId && !companyId && !vendorId) {
     const parameters = [
       {
         name: "stockInId",
         value: stockInId,
       },
       {
-        name: "clientId",
-        value: clientId,
+        name: "companyId",
+        value: companyId,
       },
       {
         name: "vendorId",
@@ -54,7 +54,7 @@ export const handleSavePutAway = async (
   const putAwayInstance = CreatePutAwayInstance();
 
   try {
-    await putAwayInstance.saveDataAsync(data, data.item.itemId);
+    await putAwayInstance.saveDataAsync(data, data.item.id);
     response.status(200).send({
       success: true,
       message: "Data saved successfully ",
@@ -72,7 +72,7 @@ export const handleGetPutAwayById = async (
   request: Request<{}, {}, {}, PutAwayGetById>,
   response: Response<WMSResponse<PutAwayItem>>
 ) => {
-  const { stockInId, clientId, vendorId, itemId } = request.query;
+  const { stockInId, companyId, vendorId, itemId } = request.query;
 
   if (!itemId) {
     response.status(422).send({
@@ -84,14 +84,14 @@ export const handleGetPutAwayById = async (
     return;
   }
 
-  await checkMandatoryParameters(stockInId, clientId, vendorId, response);
+  await checkMandatoryParameters(stockInId, companyId, vendorId, response);
 
   const putAwayInstance = CreatePutAwayInstance();
 
   try {
     const data = await putAwayInstance.findByIdAsync(
       stockInId,
-      clientId,
+      companyId,
       vendorId,
       itemId
     );
@@ -143,7 +143,7 @@ export const handleUpdatePutAwayById = async (
 
   await checkMandatoryParameters(
     data.stockInId,
-    data.clientId,
+    data.companyId,
     data.vendorId,
     response
   );
@@ -170,13 +170,13 @@ export const handleDeletePutAwayById = async (
 ) => {
   const {
     stockInId,
-    clientId,
+    companyId,
     vendorId,
     warehouseLocation,
     itemId,
   }: PutAwayGetById = request.query;
 
-  await checkMandatoryParameters(stockInId, clientId, vendorId, response);
+  await checkMandatoryParameters(stockInId, companyId, vendorId, response);
 
   if (!warehouseLocation || !itemId) {
     const missing = [];
@@ -197,7 +197,7 @@ export const handleDeletePutAwayById = async (
   try {
     await putAwayInstance.deleteDataAsync(
       stockInId,
-      clientId,
+      companyId,
       vendorId,
       warehouseLocation,
       itemId

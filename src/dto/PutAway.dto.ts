@@ -1,17 +1,17 @@
 import { Item } from "./Item.dto";
+import { SharedProperties } from "./shared/Shared.dto";
 
-export type ItemStatus = "active" | "expired" | "recalled";
-
-export type PutAwayItem = {
-  inspectionBatchNo: string;
-  clientId: string;
+export type PutAwayItem = SharedProperties & {
+  companyId: string;
   vendorId: string;
-  stockInId: string;
+  batchNo: string;
+  itemSku: string;
   item: Item;
-  arrivalDate: string;
   nearestExpirationDate?: string;
-  putAwayDate: string;
-  status?: ItemStatus;
-  notes?: string;
-  warehouseLocation: string;
+  putAwayDay: string; //de-structured date fields to ease search
+  putAwayMonth: string;
+  putAwayYear: string;
+  status?: "active" | "expired" | "recalled";
+  comments?: string;
+  warehouseId: string;
 };

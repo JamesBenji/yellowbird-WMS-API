@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const data = {
     noticeId: "NOTICE-12345",
-    clientId: "CLIENT-001",
+    companyId: "CLIENT-001",
     vendorId: "VENDOR-XYZ",
     warehouseId: "WAREHOUSE-789",
     clientContactPerson: {

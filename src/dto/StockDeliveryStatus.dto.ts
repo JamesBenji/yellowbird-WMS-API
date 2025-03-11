@@ -1,5 +1,5 @@
 export interface StockDeliveryStatus {
-  clientId: string;
+  companyId: string;
   merchantId: string;
   batchNo: string;
 }

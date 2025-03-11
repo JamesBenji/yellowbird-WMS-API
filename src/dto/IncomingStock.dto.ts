@@ -1,4 +1,5 @@
 import { Item, ItemDimensions } from "./Item.dto";
+import { SharedProperties } from "./shared/Shared.dto";
 
 export type ClientContactPerson = {
   name?: string;
@@ -14,6 +15,7 @@ export type ItemWeight = {
 export type ExpectedItems = {
   id: string;
   name?: string;
+  image: string
   description?: string;
   stockUnits: number;
   dimensions?: ItemDimensions;
@@ -26,16 +28,16 @@ export type transportInfo = {
   carrier: string;
 };
 
-export type IncomingStockInterface = {
-  noticeId?: string;
-  clientId: string;
-  vendorId: string;
+// props from 
+export type IncomingStockInterface = SharedProperties & {
+  id?: string;
+  items: Item[];
+  description?: string;
+  companyId: string;
   warehouseId: string;
-  clientContactPerson?: ClientContactPerson;
-  items: ExpectedItems[];
-  expectedArrivalDate: string;
-  orderSummaryLine?: string;
+  clientContactPerson?: ClientContactPerson | null;
   qrCode?: string;
-  callback: string;
-  timestamp: string;
+  createdBy: string
+  updatedBy: string
+  expectedArrivalDateTimeMillis: string; 
 };

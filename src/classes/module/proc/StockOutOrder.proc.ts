@@ -1,5 +1,3 @@
-
-
 /**
  * purpose:
  * 1. accepts stock out order from request
@@ -9,7 +7,6 @@
  * dto: StockOutOrder, PickingList
  */
 
-
 import { StockOutOrderDTO } from "../../../dto/StockOutOrder.dto";
 import { DB } from "../../../interfaces/databases/Database";
 import { PickingList } from "./PickingList.proc";
@@ -18,9 +15,12 @@ export class StockOutOrder {
   db: DB<StockOutOrderDTO>;
   pickingListInstance: PickingList;
 
-  constructor(DBInstance: DB<StockOutOrderDTO>, pickingListInstance: PickingList) {
+  constructor(
+    DBInstance: DB<StockOutOrderDTO>,
+    pickingListInstance: PickingList
+  ) {
     this.db = DBInstance;
-    this.pickingListInstance = pickingListInstance
+    this.pickingListInstance = pickingListInstance;
   }
 
   generateStockOutId() {
@@ -30,21 +30,21 @@ export class StockOutOrder {
   }
 
   async saveDataAsync(data: StockOutOrderDTO) {
-    const stockOutId: string = this.generateStockOutId()
-    const saveData = {...data, id: stockOutId}
-    await this.db.save(`${data.clientId}-${data.vendorId}/out/${stockOutId}`, saveData);
-    // trigger picking list creation 
-    await this.pickingListInstance.generatePickingList(data)
+    const stockOutId: string = this.generateStockOutId();
+    const saveData = { ...data, id: stockOutId };
+    await this.db.save(`${data.companyId}/out/${stockOutId}`, saveData);
+    // trigger picking list creation
+    // TODO: determine which warehouse to use based on warehouses used by client and warehouses the WMS has
+    await this.pickingListInstance.generatePickingList(data, `PLACEHOLDER_WAREHOUSE_ID`);
   }
 
   async findByIdAsync(
     id: StockOutOrderDTO["id"],
-    clientId: StockOutOrderDTO["clientId"],
-    vendorId: StockOutOrderDTO["vendorId"]
+    companyId: StockOutOrderDTO["companyId"]
   ) {
-    if (!id || !clientId || !vendorId) {
+    if (!id || !companyId) {
       const missingParams = [];
-      const paramMap: Record<string, any> = { id, clientId, vendorId };
+      const paramMap: Record<string, any> = { id, companyId };
 
       for (const key in paramMap) {
         if (!paramMap[key]) {
@@ -58,21 +58,18 @@ export class StockOutOrder {
       throw new Error(errorMessage);
     }
 
-    const data = await this.db.findById(`${clientId}-${vendorId}/out/${id}`);
+    const data = await this.db.findById(`${companyId}/out/${id}`);
     return data;
   }
 
-  async updateDataAsync(
-    data: Partial<StockOutOrderDTO>
-  ) {
-    await this.db.update(`${data.clientId}-${data.vendorId}/out/${data.id}`, data);
+  async updateDataAsync(data: Partial<StockOutOrderDTO>) {
+    await this.db.update(`${data.companyId}/out/${data.id}`, data);
   }
 
   async deleteDataAsync(
     id: StockOutOrderDTO["id"],
-    clientId: StockOutOrderDTO["clientId"],
-    vendorId: StockOutOrderDTO["vendorId"]
+    companyId: StockOutOrderDTO["companyId"]
   ) {
-    await this.db.delete(`${clientId}-${vendorId}/out/${id}`);
+    await this.db.delete(`${companyId}/out/${id}`);
   }
 }

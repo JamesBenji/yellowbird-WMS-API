@@ -1,16 +1,14 @@
 import { Item } from "./Item.dto";
+import { SharedProperties } from "./shared/Shared.dto";
 
-export type StockOutOrderDTO = {
-    id: string; 
-    clientId: string; 
-    vendorId: string; 
-    warehouseId: string; 
-    orderReference: string; 
-    items: Array<Item>;
-    createdAt: string; 
-    prepareBy: string;
-    notes?: string; 
-    logisticsBy: string;
-    status: 'pending' | 'fulfilled' | 'canceled';
-  };
-  
+export type StockOutOrderDTO = SharedProperties & {
+  id: string;
+  companyId: string;
+  items: Array<Partial<Item>>;
+  comments?: string;
+  stockOutOrderDay: string; //de-structured date fields to ease search
+  stockOutOrderMonth: string;
+  stockOutOrderYear: string;
+  logisticsProvider?: string;
+  destinationAddress?: string;
+};

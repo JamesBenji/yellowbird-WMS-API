@@ -8,6 +8,7 @@
 
 import { PutAwayItem } from "../../../dto/PutAway.dto";
 import { DB } from "../../../interfaces/databases/Database";
+import { generateNamedId } from "../../../utils/functions";
 import { Warehouse } from "../../entity/warehouse.entity";
 
 export class PutAwayModule {
@@ -19,9 +20,13 @@ export class PutAwayModule {
     this.warehouseInstance = warehouseInstance;
   }
 
+  generatePutAwayId() {
+    return generateNamedId("PUTAWAY");
+  }
+
   async saveDataAsync(data: PutAwayItem, itemId: string) {
     await this.db.save(
-      `${data.clientId}-${data.vendorId}/${data.stockInId}/${itemId}`,
+      `${this.generatePutAwayId()}`,
       data
     );
 
@@ -29,37 +34,45 @@ export class PutAwayModule {
     await this.warehouseInstance.saveDataAsync(data, itemId);
   }
 
-  async findByIdAsync(
-    stockInId: PutAwayItem["stockInId"],
-    clientId: PutAwayItem["clientId"],
-    vendorId: PutAwayItem["vendorId"],
-    itemId: string
-  ) {
-    if (!stockInId || !clientId || !vendorId) {
-      const missingParams = [];
-      const paramMap: Record<string, any> = { stockInId, clientId, vendorId };
+  // async findByIdAsync(
+  //   stockInId: PutAwayItem["stockInId"],
+  //   companyId: PutAwayItem["companyId"],
+  //   vendorId: PutAwayItem["vendorId"],
+  //   itemId: string
+  // ) {
+  //   if (!stockInId || !companyId || !vendorId) {
+  //     const missingParams = [];
+  //     const paramMap: Record<string, any> = { stockInId, companyId, vendorId };
 
-      for (const key in paramMap) {
-        if (!paramMap[key]) {
-          missingParams.push(key);
-        }
-      }
-      const errorMessage = `${missingParams.join(", ")} ${
-        missingParams.length > 1 ? "are" : "is"
-      } missing.`;
+  //     for (const key in paramMap) {
+  //       if (!paramMap[key]) {
+  //         missingParams.push(key);
+  //       }
+  //     }
+  //     const errorMessage = `${missingParams.join(", ")} ${
+  //       missingParams.length > 1 ? "are" : "is"
+  //     } missing.`;
 
-      throw new Error(errorMessage);
-    }
+  //     throw new Error(errorMessage);
+  //   }
 
-    const data = await this.db.findById(
-      `${clientId}-${vendorId}/${stockInId}/${itemId}`
-    );
-    return data;
+  //   const data = await this.db.findById(
+  //     `${companyId}-${vendorId}/${stockInId}/${itemId}`
+  //   );
+  //   return data;
+  // }
+
+  async findWithItemSKU () {
+    
+  }
+
+  async findWithItemId () {
+
   }
 
   async updateDataAsync(data: Partial<PutAwayItem>, itemId: string) {
     await this.db.update(
-      `${data.clientId}-${data.vendorId}/${data.stockInId}/${itemId}`,
+      `${data.companyId}-${data.vendorId}/${data.stockInId}/${itemId}`,
       data
     );
 
@@ -68,23 +81,23 @@ export class PutAwayModule {
 
   async deleteDataAsync(
     stockInId: PutAwayItem["stockInId"],
-    clientId: PutAwayItem["clientId"],
+    companyId: PutAwayItem["companyId"],
     vendorId: PutAwayItem["vendorId"],
     warehouseLocation: PutAwayItem["warehouseLocation"],
     itemId: string
   ) {
-    await this.db.delete(`${clientId}-${vendorId}/${stockInId}/${itemId}`);
-    
+    await this.db.delete(`${companyId}-${vendorId}/${stockInId}/${itemId}`);
+
     this.warehouseInstance.deleteDataAsync(
       warehouseLocation,
-      clientId,
+      companyId,
       vendorId,
       itemId
     );
 
     //   const record = this.warehouseInstance.findByIdAsync(
     //     warehouseLocation,
-    //     clientId,
+    //     companyId,
     //     vendorId,
     //     itemId
     //   );

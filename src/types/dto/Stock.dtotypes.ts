@@ -1,6 +1,5 @@
 type GetById = {
-  clientId: string;
-  vendorId: string;
+  companyId: string;
 };
 export type StockInGetById = GetById & { stockInId: string };
 export type InspectionGetById = GetById & { stockInId: string };

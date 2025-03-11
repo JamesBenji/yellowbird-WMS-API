@@ -7,19 +7,19 @@ import { InspectionGetById } from "../types/dto/Stock.dtotypes";
 
 const checkMandatoryParameters = async (
   stockInId: string | undefined,
-  clientId: string | undefined,
+  companyId: string | undefined,
   vendorId: string | undefined,
   response: Response
 ) => {
-  if (!stockInId && !clientId && !vendorId) {
+  if (!stockInId && !companyId && !vendorId) {
     const parameters = [
       {
         name: "stockInId",
         value: stockInId,
       },
       {
-        name: "clientId",
-        value: clientId,
+        name: "companyId",
+        value: companyId,
       },
       {
         name: "vendorId",
@@ -72,16 +72,16 @@ export const handleGetInspectionById = async (
   request: Request<{}, {}, {}, InspectionGetById>,
   response: Response<WMSResponse<InspectionResults>>
 ) => {
-  const { stockInId, clientId, vendorId } = request.query;
+  const { stockInId, companyId, vendorId } = request.query;
 
-  await checkMandatoryParameters(stockInId, clientId, vendorId, response);
+  await checkMandatoryParameters(stockInId, companyId, vendorId, response);
 
   const inspectionInstance = CreateInspectionInstance();
 
   try {
     const data = await inspectionInstance.findByIdAsync(
       stockInId,
-      clientId,
+      companyId,
       vendorId
     );
 
@@ -112,7 +112,7 @@ export const handleUpdateInspectionById = async (
 
   await checkMandatoryParameters(
     data.stockInId,
-    data.clientId,
+    data.companyId,
     data.vendorId,
     response
   );
@@ -137,14 +137,14 @@ export const handleDeleteInspectionById = async (
   request: Request<{}, {}, {}, InspectionGetById>,
   response: Response<WMSResponse<InspectionResults>>
 ) => {
-  const { stockInId, clientId, vendorId } = request.query;
+  const { stockInId, companyId, vendorId } = request.query;
 
-  await checkMandatoryParameters(stockInId, clientId, vendorId, response);
+  await checkMandatoryParameters(stockInId, companyId, vendorId, response);
 
   const inspectionInstance = CreateInspectionInstance();
 
   try {
-    await inspectionInstance.deleteDataAsync(stockInId, clientId, vendorId);
+    await inspectionInstance.deleteDataAsync(stockInId, companyId, vendorId);
 
     response.status(200).send({
       success: true,

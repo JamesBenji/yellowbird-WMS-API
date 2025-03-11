@@ -1,13 +1,11 @@
 /**
- * PARAMS: Item data, inspection flag, stockInId
+ * PARAMS: Item data, inspection flag, batchNo
  * OPERATION: Save data
  */
-import {
-  InspectedItem,
-  InspectionResults,
-} from "../../../dto/InspectionResults.dto";
+import { InspectionResults } from "../../../dto/InspectionResults.dto";
 import { Returns } from "./Returns.proc";
 import { DB } from "../../../interfaces/databases/Database";
+import { Item } from "../../../dto/Item.dto";
 
 export class InspectionModule {
   private returns: Returns;
@@ -24,9 +22,9 @@ export class InspectionModule {
     return `SKU-${timestamp}-${sequence}`;
   }
 
-  private setItemSKUs(items: Array<InspectedItem>): Array<InspectedItem> {
+  private setItemSKUs(items: Array<Item>): Array<Item> {
     const result = items.map((item) => {
-      if (item.hasPassed) {
+      if (item.passedInspection) {
         item.sku = this.generateSKU();
       }
 
@@ -37,7 +35,7 @@ export class InspectionModule {
   }
 
   async saveDataAsync(data: InspectionResults) {
-    const stockInId: string = data.stockInId;
+    const batchNo: string = data.batchNo;
     const inspectionBatchNo = `BATCH-${new Date()
       .toISOString()
       .split("T")[0]
@@ -48,20 +46,16 @@ export class InspectionModule {
       inspectedItems: dataWithSKU,
       inspectionBatchNo,
     };
-    await this.db.save(
-      `${data.clientId}-${data.vendorId}/inspection/${stockInId}`,
-      saveData
-    );
+    await this.db.save(`${batchNo}`, saveData);
   }
 
   async findByIdAsync(
-    stockInId: InspectionResults["stockInId"],
-    clientId: InspectionResults["clientId"],
-    vendorId: InspectionResults["vendorId"]
+    batchNo: InspectionResults["batchNo"],
+    companyId: InspectionResults["companyId"]
   ) {
-    if (!stockInId || !clientId || !vendorId) {
+    if (!batchNo || !companyId) {
       const missingParams = [];
-      const paramMap: Record<string, any> = { stockInId, clientId, vendorId };
+      const paramMap: Record<string, any> = { batchNo, companyId };
 
       for (const key in paramMap) {
         if (!paramMap[key]) {
@@ -75,24 +69,18 @@ export class InspectionModule {
       throw new Error(errorMessage);
     }
 
-    const data = await this.db.findById(
-      `${clientId}-${vendorId}/inspection/${stockInId}`
-    );
+    const data = await this.db.findById(`${batchNo}`);
     return data;
   }
 
   async updateDataAsync(data: Partial<InspectionResults>) {
-    await this.db.update(
-      `${data.clientId}-${data.vendorId}/inspection/${data.stockInId}`,
-      data
-    );
+    await this.db.update(`${data.batchNo}`, data);
   }
 
   async deleteDataAsync(
-    stockInId: InspectionResults["stockInId"],
-    clientId: InspectionResults["clientId"],
-    vendorId: InspectionResults["vendorId"]
+    batchNo: InspectionResults["batchNo"],
+    companyId: InspectionResults["companyId"]
   ) {
-    await this.db.delete(`${clientId}-${vendorId}/inspection/${stockInId}`);
+    await this.db.delete(`${batchNo}`);
   }
 }

@@ -29,17 +29,17 @@ export class StockIn {
   async saveDataAsync(data: StockInType) {
     const stockInId: string = this.generateStockInId()
     const saveData = {...data, stockInId}
-    await this.db.save(`${data.clientId}-${data.vendorId}/in/${stockInId}`, saveData);
+    await this.db.save(`${data.companyId}-${data.vendorId}/in/${stockInId}`, saveData);
   }
 
   async findByIdAsync(
     stockInId: StockInType["stockInId"],
-    clientId: StockInType["clientId"],
+    companyId: StockInType["companyId"],
     vendorId: StockInType["vendorId"]
   ) {
-    if (!stockInId || !clientId || !vendorId) {
+    if (!stockInId || !companyId || !vendorId) {
       const missingParams = [];
-      const paramMap: Record<string, any> = { stockInId, clientId, vendorId };
+      const paramMap: Record<string, any> = { stockInId, companyId, vendorId };
 
       for (const key in paramMap) {
         if (!paramMap[key]) {
@@ -53,21 +53,21 @@ export class StockIn {
       throw new Error(errorMessage);
     }
 
-    const data = await this.db.findById(`${clientId}-${vendorId}/in/${stockInId}`);
+    const data = await this.db.findById(`${companyId}-${vendorId}/in/${stockInId}`);
     return data;
   }
 
   async updateDataAsync(
     data: Partial<StockInType>
   ) {
-    await this.db.update(`${data.clientId}-${data.vendorId}/in/${data.stockInId}`, data);
+    await this.db.update(`${data.companyId}-${data.vendorId}/in/${data.stockInId}`, data);
   }
 
   async deleteDataAsync(
     stockInId: StockInType["stockInId"],
-    clientId: StockInType["clientId"],
+    companyId: StockInType["companyId"],
     vendorId: StockInType["vendorId"]
   ) {
-    await this.db.delete(`${clientId}-${vendorId}/in/${stockInId}`);
+    await this.db.delete(`${companyId}-${vendorId}/in/${stockInId}`);
   }
 }
