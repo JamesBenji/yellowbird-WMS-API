@@ -9,6 +9,7 @@
 
 import { StockOutOrderDTO } from "../../../dto/StockOutOrder.dto";
 import { DB } from "../../../interfaces/databases/Database";
+import { DateSearchObjectType } from "../../../types/dto";
 import { PickingList } from "./PickingList.proc";
 
 export class StockOutOrder {
@@ -32,44 +33,46 @@ export class StockOutOrder {
   async saveDataAsync(data: StockOutOrderDTO) {
     const stockOutId: string = this.generateStockOutId();
     const saveData = { ...data, id: stockOutId };
-    await this.db.save(`${data.companyId}/out/${stockOutId}`, saveData);
+    await this.db.save(`${stockOutId}`, saveData);
     // trigger picking list creation
     // TODO: determine which warehouse to use based on warehouses used by client and warehouses the WMS has
     await this.pickingListInstance.generatePickingList(data, `PLACEHOLDER_WAREHOUSE_ID`);
   }
 
   async findByIdAsync(
-    id: StockOutOrderDTO["id"],
-    companyId: StockOutOrderDTO["companyId"]
+    stockOutId: StockOutOrderDTO["id"],
   ) {
-    if (!id || !companyId) {
-      const missingParams = [];
-      const paramMap: Record<string, any> = { id, companyId };
+    // if (!id || !companyId) {
+    //   const missingParams = [];
+    //   const paramMap: Record<string, any> = { id, companyId };
 
-      for (const key in paramMap) {
-        if (!paramMap[key]) {
-          missingParams.push(key);
-        }
-      }
-      const errorMessage = `${missingParams.join(", ")} ${
-        missingParams.length > 1 ? "are" : "is"
-      } missing.`;
+    //   for (const key in paramMap) {
+    //     if (!paramMap[key]) {
+    //       missingParams.push(key);
+    //     }
+    //   }
+    //   const errorMessage = `${missingParams.join(", ")} ${
+    //     missingParams.length > 1 ? "are" : "is"
+    //   } missing.`;
 
-      throw new Error(errorMessage);
-    }
+    //   throw new Error(errorMessage);
+    // }
 
-    const data = await this.db.findById(`${companyId}/out/${id}`);
+    const data = await this.db.findById(`${stockOutId}`);
     return data;
   }
 
-  async updateDataAsync(data: Partial<StockOutOrderDTO>) {
-    await this.db.update(`${data.companyId}/out/${data.id}`, data);
+  async updateDataAsync(data: Partial<StockOutOrderDTO>, stockOutId: StockOutOrderDTO["id"]) {
+    await this.db.update(`${stockOutId}`, data);
   }
 
   async deleteDataAsync(
     id: StockOutOrderDTO["id"],
-    companyId: StockOutOrderDTO["companyId"]
   ) {
-    await this.db.delete(`${companyId}/out/${id}`);
+    await this.db.delete(`${id}`);
+  }
+
+  async searchByDate(props: DateSearchObjectType) {
+    await this.db.searchByDate(props)
   }
 }

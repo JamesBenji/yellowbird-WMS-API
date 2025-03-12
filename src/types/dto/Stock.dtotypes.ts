@@ -1,15 +1,22 @@
 type GetById = {
-  companyId: string;
+  id?: string;
 };
-export type StockInGetById = GetById & { stockInId: string };
-export type InspectionGetById = GetById & { stockInId: string };
+export type StockInGetById = GetById & { batchNo: string };
+export type InspectionGetById = GetById & { batchNo: string };
 export type PutAwayGetById = GetById & {
-  stockInId: string;
-  itemId: string;
-  warehouseLocation?: string;
+  itemSku?: string;
+  productId?: string;
+  warehouseId?: string;
 };
-export type StockOutGetById = GetById & { id: string };
+export type StockOutGetById = GetById;
 export type DispatchedGetById = {
   stockOutOrderId: string;
-  id: string
-}
+  id: string;
+};
+
+export type GetIncomingStockById = GetById;
+export type SearchByDateType = {
+  day?: number;
+  month?: number;
+  year?: number;
+};

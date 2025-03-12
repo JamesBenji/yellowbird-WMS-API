@@ -6,6 +6,7 @@ import { InspectionResults } from "../../../dto/InspectionResults.dto";
 import { Returns } from "./Returns.proc";
 import { DB } from "../../../interfaces/databases/Database";
 import { Item } from "../../../dto/Item.dto";
+import { DateSearchObjectType } from "../../../types/dto";
 
 export class InspectionModule {
   private returns: Returns;
@@ -51,23 +52,22 @@ export class InspectionModule {
 
   async findByIdAsync(
     batchNo: InspectionResults["batchNo"],
-    companyId: InspectionResults["companyId"]
   ) {
-    if (!batchNo || !companyId) {
-      const missingParams = [];
-      const paramMap: Record<string, any> = { batchNo, companyId };
+    // if (!batchNo || !companyId) {
+    //   const missingParams = [];
+    //   const paramMap: Record<string, any> = { batchNo, companyId };
 
-      for (const key in paramMap) {
-        if (!paramMap[key]) {
-          missingParams.push(key);
-        }
-      }
-      const errorMessage = `${missingParams.join(", ")} ${
-        missingParams.length > 1 ? "are" : "is"
-      } missing.`;
+    //   for (const key in paramMap) {
+    //     if (!paramMap[key]) {
+    //       missingParams.push(key);
+    //     }
+    //   }
+    //   const errorMessage = `${missingParams.join(", ")} ${
+    //     missingParams.length > 1 ? "are" : "is"
+    //   } missing.`;
 
-      throw new Error(errorMessage);
-    }
+    //   throw new Error(errorMessage);
+    // }
 
     const data = await this.db.findById(`${batchNo}`);
     return data;
@@ -79,8 +79,11 @@ export class InspectionModule {
 
   async deleteDataAsync(
     batchNo: InspectionResults["batchNo"],
-    companyId: InspectionResults["companyId"]
   ) {
     await this.db.delete(`${batchNo}`);
   }
+
+  async searchByDate(props: DateSearchObjectType) {
+      await this.db.searchByDate(props)
+    }
 }

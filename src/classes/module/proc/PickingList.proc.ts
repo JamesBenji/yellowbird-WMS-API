@@ -1,6 +1,7 @@
 import { PickingListDTO } from "../../../dto/PickingList.dto";
 import { StockOutOrderDTO } from "../../../dto/StockOutOrder.dto";
 import { DB } from "../../../interfaces/databases/Database";
+import { DateSearchObjectType } from "../../../types/dto";
 
 export class PickingList {
   db: DB<PickingListDTO>;
@@ -37,7 +38,7 @@ export class PickingList {
     };
 
     try {
-      await this.db.save(`${stockOutOrder.id}/list/${id}`, pickingList);
+      await this.db.save(`${id}`, pickingList);
       // return pickingList;
     } catch (error) {
       console.error("Error generating picking list:", error);
@@ -45,4 +46,8 @@ export class PickingList {
     }
 
   }
+
+  async searchByDate(props: DateSearchObjectType) {
+      await this.db.searchByDate(props)
+    }
 }

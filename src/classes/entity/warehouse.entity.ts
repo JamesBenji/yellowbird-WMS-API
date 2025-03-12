@@ -8,54 +8,48 @@ export class Warehouse {
     this.db = dbInstance;
   }
 
-  async saveDataAsync(data: PutAwayItem, itemId: string) {
+  async saveDataAsync(data: PutAwayItem) {
     await this.db.save(
-      `${data.warehouseLocation}/items/${data.companyId}-${data.vendorId}-${itemId}`,
+      `${data.itemSku}`,
       data
     );
   }
 
   async findByIdAsync(
-    warehouseLocation: PutAwayItem["warehouseLocation"],
-    companyId: PutAwayItem["companyId"],
-    vendorId: PutAwayItem["vendorId"],
-    itemId: string
+    itemSku: PutAwayItem["itemSku"],
   ) {
-    if (!warehouseLocation || !companyId || !vendorId) {
-      const missingParams = [];
-      const paramMap: Record<string, any> = { warehouseLocation, companyId, vendorId };
+    // if (!warehouseLocation || !companyId || !vendorId) {
+    //   const missingParams = [];
+    //   const paramMap: Record<string, any> = { warehouseLocation, companyId, vendorId };
 
-      for (const key in paramMap) {
-        if (!paramMap[key]) {
-          missingParams.push(key);
-        }
-      }
-      const errorMessage = `${missingParams.join(", ")} ${
-        missingParams.length > 1 ? "are" : "is"
-      } missing.`;
+    //   for (const key in paramMap) {
+    //     if (!paramMap[key]) {
+    //       missingParams.push(key);
+    //     }
+    //   }
+    //   const errorMessage = `${missingParams.join(", ")} ${
+    //     missingParams.length > 1 ? "are" : "is"
+    //   } missing.`;
 
-      throw new Error(errorMessage);
-    }
+    //   throw new Error(errorMessage);
+    // }
 
     const data = await this.db.findById(
-      `${warehouseLocation}/items/${companyId}-${vendorId}-${itemId}`
+      `${itemSku}`
     );
     return data;
   }
 
-  async updateDataAsync(data: Partial<PutAwayItem>, itemId: string) {
+  async updateDataAsync(data: Partial<PutAwayItem>, itemSku: PutAwayItem["itemSku"],) {
     await this.db.update(
-      `${data.warehouseLocation}/items/${data.companyId}-${data.vendorId}-${itemId}`,
+      `${itemSku}`,
       data
     );
   }
 
   async deleteDataAsync(
-    warehouseLocation: PutAwayItem["warehouseLocation"],
-    companyId: PutAwayItem["companyId"],
-    vendorId: PutAwayItem["vendorId"],
-    itemId: string
+    itemSku: PutAwayItem["itemSku"],
   ) {
-    await this.db.delete(`${warehouseLocation}/items/${companyId}-${vendorId}-${itemId}`);
+    await this.db.delete(`${itemSku}`);
   }
 }

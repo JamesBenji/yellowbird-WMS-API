@@ -8,9 +8,6 @@ export type PutAwayItem = SharedProperties & {
   itemSku: string;
   item: Item;
   nearestExpirationDate?: string;
-  putAwayDay: string; //de-structured date fields to ease search
-  putAwayMonth: string;
-  putAwayYear: string;
   status?: "active" | "expired" | "recalled";
   comments?: string;
   warehouseId: string;

@@ -72,29 +72,24 @@ export const handleGetPutAwayById = async (
   request: Request<{}, {}, {}, PutAwayGetById>,
   response: Response<WMSResponse<PutAwayItem>>
 ) => {
-  const { stockInId, companyId, vendorId, itemId } = request.query;
+  const { itemSku, productId, warehouseId } = request.query;
 
-  if (!itemId) {
-    response.status(422).send({
-      success: false,
-      error: "Missing parameters",
-      message: "itemId parameter is missing",
-    });
+  // if (!itemId) {
+  //   response.status(422).send({
+  //     success: false,
+  //     error: "Missing parameters",
+  //     message: "itemId parameter is missing",
+  //   });
 
-    return;
-  }
+  //   return;
+  // }
 
-  await checkMandatoryParameters(stockInId, companyId, vendorId, response);
+  // await checkMandatoryParameters(stockInId, companyId, vendorId, response);
 
   const putAwayInstance = CreatePutAwayInstance();
 
   try {
-    const data = await putAwayInstance.findByIdAsync(
-      stockInId,
-      companyId,
-      vendorId,
-      itemId
-    );
+    const data = await putAwayInstance.findByItemId({});
 
     if (!data) {
       response.status(404).send({
@@ -116,11 +111,11 @@ export const handleGetPutAwayById = async (
 };
 
 export const handleUpdatePutAwayById = async (
-  request: Request<{}, {}, Partial<PutAwayItem >, {itemId: string}>,
+  request: Request<{}, {}, Partial<PutAwayItem>, { itemId: string }>,
   response: Response<WMSResponse<PutAwayItem>>
 ) => {
   const data = request.body;
-  const {itemId} = request.query
+  const { itemId } = request.query;
 
   if (!data) {
     response.status(422).send({
@@ -141,12 +136,12 @@ export const handleUpdatePutAwayById = async (
   //   return;
   // }
 
-  await checkMandatoryParameters(
-    data.stockInId,
-    data.companyId,
-    data.vendorId,
-    response
-  );
+  // await checkMandatoryParameters(
+  //   data.stockInId,
+  //   data.companyId,
+  //   data.vendorId,
+  //   response
+  // );
 
   const putAwayInstance = CreatePutAwayInstance();
 
@@ -169,38 +164,30 @@ export const handleDeletePutAwayById = async (
   response: Response<WMSResponse<PutAwayItem>>
 ) => {
   const {
-    stockInId,
-    companyId,
-    vendorId,
-    warehouseLocation,
-    itemId,
+    itemSku
   }: PutAwayGetById = request.query;
 
-  await checkMandatoryParameters(stockInId, companyId, vendorId, response);
+  // await checkMandatoryParameters(stockInId, companyId, vendorId, response);
 
-  if (!warehouseLocation || !itemId) {
-    const missing = [];
-    if (!warehouseLocation) missing.push("warehouseLocation");
-    if (!itemId) missing.push("itemId");
+  // if (!warehouseLocation || !itemId) {
+  //   const missing = [];
+  //   if (!warehouseLocation) missing.push("warehouseLocation");
+  //   if (!itemId) missing.push("itemId");
 
-    const msg = missing.join(", ");
-    response.status(422).send({
-      success: false,
-      error: "Missing parameters",
-      message: `${msg} missing`,
-    });
-    return;
-  }
+  //   const msg = missing.join(", ");
+  //   response.status(422).send({
+  //     success: false,
+  //     error: "Missing parameters",
+  //     message: `${msg} missing`,
+  //   });
+  //   return;
+  // }
 
   const putAwayInstance = CreatePutAwayInstance();
 
   try {
     await putAwayInstance.deleteDataAsync(
-      stockInId,
-      companyId,
-      vendorId,
-      warehouseLocation,
-      itemId
+      itemSku!
     );
 
     response.status(200).send({

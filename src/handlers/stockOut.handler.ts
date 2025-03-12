@@ -35,48 +35,46 @@ export const handleGetStockOutById = async (
   request: Request<{}, {}, {}, StockOutGetById>,
   response: Response<WMSResponse<StockOutOrderDTO>>
 ) => {
-  const { id, companyId, vendorId } = request.query;
+  const { id } = request.query;
 
-  if (!id && !companyId && !vendorId) {
-    const parameters = [
-      {
-        name: "id",
-        value: id,
-      },
-      {
-        name: "companyId",
-        value: companyId,
-      },
-      {
-        name: "vendorId",
-        value: vendorId,
-      },
-    ];
+  // if (!id && !companyId && !vendorId) {
+  //   const parameters = [
+  //     {
+  //       name: "id",
+  //       value: id,
+  //     },
+  //     {
+  //       name: "companyId",
+  //       value: companyId,
+  //     },
+  //     {
+  //       name: "vendorId",
+  //       value: vendorId,
+  //     },
+  //   ];
 
-    const missingParameters = parameters.filter(
-      (param) => !!param.value === false && param.name
-    );
+  //   const missingParameters = parameters.filter(
+  //     (param) => !!param.value === false && param.name
+  //   );
 
-    const missingParametersString = missingParameters.join(", ");
+  //   const missingParametersString = missingParameters.join(", ");
 
-    response.status(422).send({
-      success: false,
-      error: "Missing parameters",
-      message: `${missingParametersString} ${
-        missingParametersString.length > 1 ? "properties are" : "property is"
-      } missing`,
-    });
+  //   response.status(422).send({
+  //     success: false,
+  //     error: "Missing parameters",
+  //     message: `${missingParametersString} ${
+  //       missingParametersString.length > 1 ? "properties are" : "property is"
+  //     } missing`,
+  //   });
 
-    return;
-  }
+  //   return;
+  // }
 
   const stockOutInstance = CreateStockOutOrderInstance();
 
   try {
     const data = await stockOutInstance.findByIdAsync(
-      id,
-      companyId,
-      vendorId
+      id!
     );
 
     if (!data) {
@@ -91,6 +89,7 @@ export const handleGetStockOutById = async (
       success: true,
       data: data as StockOutOrderDTO,
     });
+
   } catch (error) {
     console.error("Caught in stockOut.handler.ts :: handleStockOut");
     console.error(error);
@@ -99,48 +98,49 @@ export const handleGetStockOutById = async (
 };
 
 export const handleUpdateStockOutById = async (
-  request: Request<{}, {}, Partial<StockOutOrderDTO>>,
+  request: Request<{}, {}, Partial<StockOutOrderDTO>, StockOutGetById>,
   response: Response<WMSResponse<StockOutOrderDTO>>
 ) => {
   const data = request.body;
+  const {id} = request.query
 
-  if (!data.id && !data.companyId && !data.vendorId) {
-    const parameters = [
-      {
-        name: "id",
-        value: data.id,
-      },
-      {
-        name: "companyId",
-        value: data.companyId,
-      },
-      {
-        name: "vendorId",
-        value: data.vendorId,
-      },
-    ];
+  // if (!data.id && !data.companyId && !data.vendorId) {
+  //   const parameters = [
+  //     {
+  //       name: "id",
+  //       value: data.id,
+  //     },
+  //     {
+  //       name: "companyId",
+  //       value: data.companyId,
+  //     },
+  //     {
+  //       name: "vendorId",
+  //       value: data.vendorId,
+  //     },
+  //   ];
 
-    const missingParameters = parameters.filter(
-      (param) => !!param.value === false && param.name
-    );
+  //   const missingParameters = parameters.filter(
+  //     (param) => !!param.value === false && param.name
+  //   );
 
-    const missingParametersString = missingParameters.join(", ");
+  //   const missingParametersString = missingParameters.join(", ");
 
-    response.status(422).send({
-      success: false,
-      error: "Missing parameters",
-      message: `${missingParametersString} ${
-        missingParametersString.length > 1 ? "properties are" : "property is"
-      } missing`,
-    });
+  //   response.status(422).send({
+  //     success: false,
+  //     error: "Missing parameters",
+  //     message: `${missingParametersString} ${
+  //       missingParametersString.length > 1 ? "properties are" : "property is"
+  //     } missing`,
+  //   });
 
-    return;
-  }
+  //   return;
+  // }
 
   const stockOutInstance = CreateStockOutOrderInstance();
 
   try {
-    await stockOutInstance.updateDataAsync(data);
+    await stockOutInstance.updateDataAsync(data, id!);
     
     response.status(200).send({
       success: true,
@@ -159,45 +159,45 @@ export const handleDeleteStockOutById = async (
   request: Request<{}, {}, {}, StockOutGetById>,
   response: Response<WMSResponse<StockInType>>
 ) => {
-  const { id, companyId, vendorId } = request.query;
+  const { id } = request.query;
 
-  if (!id && !companyId && !vendorId) {
-    const parameters = [
-      {
-        name: "id",
-        value: id,
-      },
-      {
-        name: "companyId",
-        value: companyId,
-      },
-      {
-        name: "vendorId",
-        value: vendorId,
-      },
-    ];
+  // if (!id && !companyId && !vendorId) {
+  //   const parameters = [
+  //     {
+  //       name: "id",
+  //       value: id,
+  //     },
+  //     {
+  //       name: "companyId",
+  //       value: companyId,
+  //     },
+  //     {
+  //       name: "vendorId",
+  //       value: vendorId,
+  //     },
+  //   ];
 
-    const missingParameters = parameters.filter(
-      (param) => !!param.value === false && param.name
-    );
+  //   const missingParameters = parameters.filter(
+  //     (param) => !!param.value === false && param.name
+  //   );
 
-    const missingParametersString = missingParameters.join(", ");
+  //   const missingParametersString = missingParameters.join(", ");
 
-    response.status(422).send({
-      success: false,
-      error: "Missing parameters",
-      message: `${missingParametersString} ${
-        missingParametersString.length > 1 ? "properties are" : "property is"
-      } missing`,
-    });
+  //   response.status(422).send({
+  //     success: false,
+  //     error: "Missing parameters",
+  //     message: `${missingParametersString} ${
+  //       missingParametersString.length > 1 ? "properties are" : "property is"
+  //     } missing`,
+  //   });
 
-    return;
-  }
+  //   return;
+  // }
 
   const stockOutInstance = CreateStockOutOrderInstance();
 
   try {
-    await stockOutInstance.deleteDataAsync(id, companyId, vendorId);
+    await stockOutInstance.deleteDataAsync(id!);
     
     response.status(200).send({
       success: true,

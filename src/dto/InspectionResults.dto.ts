@@ -45,9 +45,6 @@ export type InspectionResults = SharedProperties & {
   inspector: InspectorDetails;
   notes?: string;
   companyId: string;
-  inspectionDay: string; //de-structured date fields to ease search
-  inspectionMonth: string;
-  inspectionYear: string;
   inspectionDateTimeMillis: string;
   inspectionStartDateTimeMillis: number;
   inspectionEndDateTimeMillis: number;

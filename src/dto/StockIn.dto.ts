@@ -6,9 +6,6 @@ export type StockInType = SharedProperties & {
   companyId?: string;
   incomingStockId: string; //reference to the incoming stock notification
   items: Array<Item>;
-  arrivalDay: string; //de-structured date fields to ease search
-  arrivalMonth: string;
-  arrivalYear: string;
   receiverId: string;
   comments?: string;
   warehouseId: string;

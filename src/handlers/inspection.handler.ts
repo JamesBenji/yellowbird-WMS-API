@@ -72,17 +72,13 @@ export const handleGetInspectionById = async (
   request: Request<{}, {}, {}, InspectionGetById>,
   response: Response<WMSResponse<InspectionResults>>
 ) => {
-  const { stockInId, companyId, vendorId } = request.query;
-
-  await checkMandatoryParameters(stockInId, companyId, vendorId, response);
+  const { batchNo } = request.query;
 
   const inspectionInstance = CreateInspectionInstance();
 
   try {
     const data = await inspectionInstance.findByIdAsync(
-      stockInId,
-      companyId,
-      vendorId
+      batchNo
     );
 
     if (!data) {
@@ -110,12 +106,12 @@ export const handleUpdateInspectionById = async (
 ) => {
   const data = request.body;
 
-  await checkMandatoryParameters(
-    data.stockInId,
-    data.companyId,
-    data.vendorId,
-    response
-  );
+  // await checkMandatoryParameters(
+  //   data.stockInId,
+  //   data.companyId,
+  //   data.vendorId,
+  //   response
+  // );
 
   const inspectionInstance = CreateInspectionInstance();
 
@@ -137,14 +133,14 @@ export const handleDeleteInspectionById = async (
   request: Request<{}, {}, {}, InspectionGetById>,
   response: Response<WMSResponse<InspectionResults>>
 ) => {
-  const { stockInId, companyId, vendorId } = request.query;
+  const { batchNo } = request.query;
 
-  await checkMandatoryParameters(stockInId, companyId, vendorId, response);
+  // await checkMandatoryParameters(stockInId, companyId, vendorId, response);
 
   const inspectionInstance = CreateInspectionInstance();
 
   try {
-    await inspectionInstance.deleteDataAsync(stockInId, companyId, vendorId);
+    await inspectionInstance.deleteDataAsync(batchNo);
 
     response.status(200).send({
       success: true,

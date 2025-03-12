@@ -10,6 +10,7 @@
 
 import { DispatchedStockDTO } from "../../../dto/DispatchedStock.dto";
 import { DB } from "../../../interfaces/databases/Database";
+import { DateSearchObjectType } from "../../../types/dto";
 
 
 export class Dispatched {
@@ -66,5 +67,9 @@ export class Dispatched {
     stockOutOrderId: DispatchedStockDTO["stockOutOrderId"],
   ) {
     await this.db.delete(`${id}`);
+  }
+
+  async searchByDate(props: DateSearchObjectType) {
+    await this.db.searchByDate(props)
   }
 }

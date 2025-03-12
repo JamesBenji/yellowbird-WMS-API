@@ -12,6 +12,7 @@
 
 import { StockInType } from "../../../dto/StockIn.dto";
 import { DB } from "../../../interfaces/databases/Database";
+import { DateSearchObjectType } from "../../../types/dto";
 
 export class StockIn {
   db: DB<StockInType>;
@@ -29,45 +30,46 @@ export class StockIn {
   async saveDataAsync(data: StockInType) {
     const stockInId: string = this.generateStockInId()
     const saveData = {...data, stockInId}
-    await this.db.save(`${data.companyId}-${data.vendorId}/in/${stockInId}`, saveData);
+    await this.db.save(`${stockInId}`, saveData);
   }
 
-  async findByIdAsync(
-    stockInId: StockInType["stockInId"],
-    companyId: StockInType["companyId"],
-    vendorId: StockInType["vendorId"]
+  async findByBatchNoAsync(
+    batchNo: StockInType["batchNo"]
   ) {
-    if (!stockInId || !companyId || !vendorId) {
-      const missingParams = [];
-      const paramMap: Record<string, any> = { stockInId, companyId, vendorId };
+    // if (!batchNo || !companyId || !vendorId) {
+    //   const missingParams = [];
+    //   const paramMap: Record<string, any> = { stockInId, companyId, vendorId };
 
-      for (const key in paramMap) {
-        if (!paramMap[key]) {
-          missingParams.push(key);
-        }
-      }
-      const errorMessage = `${missingParams.join(", ")} ${
-        missingParams.length > 1 ? "are" : "is"
-      } missing.`;
+    //   for (const key in paramMap) {
+    //     if (!paramMap[key]) {
+    //       missingParams.push(key);
+    //     }
+    //   }
+    //   const errorMessage = `${missingParams.join(", ")} ${
+    //     missingParams.length > 1 ? "are" : "is"
+    //   } missing.`;
 
-      throw new Error(errorMessage);
-    }
+    //   throw new Error(errorMessage);
+    // }
 
-    const data = await this.db.findById(`${companyId}-${vendorId}/in/${stockInId}`);
+    const data = await this.db.findById(`${batchNo}`);
     return data;
   }
 
   async updateDataAsync(
-    data: Partial<StockInType>
+    data: Partial<StockInType>,
+    batchNo: StockInType['batchNo']
   ) {
-    await this.db.update(`${data.companyId}-${data.vendorId}/in/${data.stockInId}`, data);
+    await this.db.update(`${batchNo}`, data);
   }
 
   async deleteDataAsync(
-    stockInId: StockInType["stockInId"],
-    companyId: StockInType["companyId"],
-    vendorId: StockInType["vendorId"]
+    batchNo: StockInType["batchNo"]
   ) {
-    await this.db.delete(`${companyId}-${vendorId}/in/${stockInId}`);
+    await this.db.delete(`${batchNo}`);
+  }
+
+  async searchByDate(props: DateSearchObjectType) {
+    await this.db.searchByDate(props)
   }
 }

@@ -5,36 +5,46 @@
  */
 import { firestore } from "firebase-admin";
 import { DB } from "../../../interfaces/databases/Database";
+import { FirebaseDateSearcher } from "../../utils/FirebaseDateSearcher";
+import { DateSearchObjectType } from "../../../types/dto";
 
 export class FirebaseDB<T extends firestore.DocumentData> implements DB<T> {
-  private readonly basePath: string;
+  private readonly baseCollection: string;
 
   constructor(collectionName: string) {
-    this.basePath = collectionName;
+    this.baseCollection = collectionName;
   }
 
   private getFullPath(path: string) {
-    return this.basePath ? `${this.basePath}/${path}` : path;
+    // return this.baseCollection ? `${this.baseCollection}/${path}` : path;
+    return this.baseCollection;
   }
 
-  private isPathOdd(path: string): boolean {
-    const segments = path.split("/").filter((segment) => segment.length > 0);
-    return segments.length % 2 === 1;
+  // private isPathOdd(path: string): boolean {
+  //   const segments = path.split("/").filter((segment) => segment.length > 0);
+  //   return segments.length % 2 === 1;
+  // }
+
+  private async getDocRef(id: string) {
+    return await firestore().collection(this.baseCollection).doc(id);
   }
 
-  async save(path: string, data: T): Promise<string> {
+  async save(id: string, data: T): Promise<void> {
     try {
-      const fullPath = this.getFullPath(path);
-      let ref;
-      if (this.isPathOdd(path)) {
-        ref = firestore().doc(fullPath);
-        await ref.set(data);
-      } else {
-        const collectionRef = firestore().collection(fullPath);
-        ref = await collectionRef.add(data);
-      }
+      // const fullPath = this.getFullPath(id);
+      // const fullPath = this.baseCollection;
+      // let ref;
+      // if (this.isPathOdd(path)) {
+      //   ref = firestore().doc(fullPath);
+      //   await ref.set(data);
+      // } else {
+      //   const collectionRef = firestore().collection(fullPath);
+      //   ref = await collectionRef.add(data);
+      // }
 
-      return ref.id;
+      // return ref.id;
+      const docRef = await this.getDocRef(id);
+      await docRef.set(data);
     } catch (error) {
       throw new Error(
         `Save failed: ${error instanceof Error ? error.message : String(error)}`
@@ -42,41 +52,41 @@ export class FirebaseDB<T extends firestore.DocumentData> implements DB<T> {
     }
   }
 
-  async getDocRef(
-    path: string
-  ): Promise<firestore.DocumentReference<
-    firestore.DocumentData,
-    firestore.DocumentData
-  > | null> {
+  // async getDocRef(
+  //   path: string
+  // ): Promise<firestore.DocumentReference<
+  //   firestore.DocumentData,
+  //   firestore.DocumentData
+  // > | null> {
+  //   try {
+  //     const fullPath = this.getFullPath(path);
+
+  //     if (!this.isPathOdd(path)) {
+  //       throw new Error(`Invalid path(${path}): Unexpected odd path received`);
+  //     }
+
+  //     const docRef = firestore().doc(fullPath);
+  //     return docRef;
+  //   } catch (error) {
+  //     console.error(error);
+  //     return null;
+  //   }
+  // }
+
+  async findById(id: string): Promise<T | string | null> {
     try {
-      const fullPath = this.getFullPath(path);
+      // if (!this.isPathOdd(path)) {
+      //   throw new Error(
+      //     `${path} is invalid. Odd number of path segments were expected. e.g. A/B/C`
+      //   );
+      // }
 
-      if (!this.isPathOdd(path)) {
-        throw new Error(`Invalid path(${path}): Unexpected odd path received`);
-      }
-
-      const docRef = firestore().doc(fullPath);
-      return docRef;
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
-  }
-
-  async findById(path: string): Promise<T | string | null> {
-    try {
-      if (!this.isPathOdd(path)) {
-        throw new Error(
-          `${path} is invalid. Odd number of path segments were expected. e.g. A/B/C`
-        );
-      }
-
-      const docRef = await this.getDocRef(path);
+      // const docRef = await this.getDocRef(path);
+      const docRef = await this.getDocRef(id);
 
       if (!docRef) {
         throw new Error("null document ref received");
       }
-
       const data = (await docRef.get()).data() as T;
 
       return data;
@@ -89,16 +99,16 @@ export class FirebaseDB<T extends firestore.DocumentData> implements DB<T> {
     }
   }
 
-  async update(path: string, partialData: Partial<T>): Promise<void> {
+  async update(id: string, partialData: Partial<T>): Promise<void> {
     try {
-      if (!this.isPathOdd(path)) {
-        throw new Error(
-          `${path} is invalid. Odd number of path segments were expected. e.g. A/B/C`
-        );
-      }
+      // if (!this.isPathOdd(path)) {
+      //   throw new Error(
+      //     `${path} is invalid. Odd number of path segments were expected. e.g. A/B/C`
+      //   );
+      // }
 
-      const docRef = await this.getDocRef(path);
-
+      const docRef = await this.getDocRef(id)
+      
       if (!docRef) {
         throw new Error("null document ref received");
       }
@@ -114,15 +124,15 @@ export class FirebaseDB<T extends firestore.DocumentData> implements DB<T> {
     }
   }
 
-  async delete(path: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     try {
-      if (!this.isPathOdd(path)) {
-        throw new Error(
-          `${path} is invalid. Odd number of path segments were expected. e.g. A/B/C`
-        );
-      }
+      // if (!this.isPathOdd(path)) {
+      //   throw new Error(
+      //     `${path} is invalid. Odd number of path segments were expected. e.g. A/B/C`
+      //   );
+      // }
 
-      const docRef = await this.getDocRef(path);
+      const docRef = await this.getDocRef(id);
 
       if (!docRef) {
         throw new Error("null document ref received");
@@ -136,6 +146,20 @@ export class FirebaseDB<T extends firestore.DocumentData> implements DB<T> {
           error instanceof Error ? error.message : String(error)
         }`
       );
+    }
+  }
+
+  async searchByDate(
+    props: DateSearchObjectType
+  ): Promise<Array<Object> | null> {
+    const FBDateSearcher = new FirebaseDateSearcher(this.baseCollection);
+
+    try {
+      const results = FBDateSearcher.searchByDate(props);
+      return results;
+    } catch (error) {
+      console.log({ SearchByDateError: error });
+      return null;
     }
   }
 }
